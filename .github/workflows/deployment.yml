@@ -1,0 +1,24 @@
+name: CI/CD Pipeline
+on:
+  push:
+    branches: [ master ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Login to DockerHub Registry
+        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+      - name: Get current time
+        uses: srfrnk/current-time@master
+        id: current-time
+        with:
+          format: YYYYMMDD-HHmm
+      - name: Build the tagged Docker image
+        env:
+          IMAGE_TAG: "${{ steps.current-time.outputs.formattedTime }}"
+        run: docker build -t momenteam/dya-api:$IMAGE_TAG .
+      - name: Push the tagged Docker image
+        env:
+          IMAGE_TAG: "${{ steps.current-time.outputs.formattedTime }}"
+        run: docker push momenteam/dya-api:$IMAGE_TAG

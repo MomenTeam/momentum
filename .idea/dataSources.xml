@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="hackathon@hackathon.qw6qb.mongodb.net" uuid="98b6bcad-8fc3-486c-9898-b36ea4955c80">
+      <driver-ref>mongo</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>
+      <jdbc-url>mongodb+srv://hackathon.qw6qb.mongodb.net/hackathon?retryWrites=true&amp;w=majority</jdbc-url>
+    </data-source>
+  </component>
+</project>

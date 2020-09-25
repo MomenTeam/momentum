@@ -1,0 +1,9 @@
+{
+    "database": {
+        "connectionString": "mongodb://otsimodb:27018",
+        "databaseName": "Otsimo"
+    },
+    "server": {
+        "port": "8080"
+    }
+}

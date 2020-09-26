@@ -8,11 +8,94 @@ definitions:
     type: object
   controllers.NeedyForm:
     properties:
+      address:
+        $ref: '#/definitions/models.Address'
+        type: object
       firstName:
+        type: string
+      lastName:
+        type: string
+      needs:
+        items:
+          $ref: '#/definitions/models.Need'
+        type: array
+      needyCategory:
+        type: integer
+      phoneNumber:
+        type: string
+      priority:
+        type: integer
+      summary:
         type: string
     type: object
   gin.H:
     additionalProperties: true
+    type: object
+  models.Address:
+    properties:
+      city:
+        type: string
+      district:
+        type: string
+      firstLine:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      phoneNumber:
+        type: string
+      postalCode:
+        type: string
+      secondLine:
+        type: string
+    type: object
+  models.Good:
+    properties:
+      goodCategory:
+        type: integer
+      isAvailable:
+        type: boolean
+      name:
+        type: string
+      photoLink:
+        type: string
+      price:
+        type: number
+    type: object
+  models.LineItem:
+    properties:
+      amount:
+        type: integer
+      description:
+        type: string
+      good:
+        $ref: '#/definitions/models.Good'
+        type: object
+    type: object
+  models.Need:
+    properties:
+      cancelledAt:
+        type: string
+      cancelledBy:
+        type: string
+      description:
+        type: string
+      fulfilledAt:
+        type: string
+      fulfilledBy:
+        description: 'TODO: change this'
+        type: string
+      isCancelled:
+        type: boolean
+      isFulfilled:
+        type: boolean
+      lineItems:
+        items:
+          $ref: '#/definitions/models.LineItem'
+        type: array
+      name:
+        type: string
     type: object
 info:
   contact: {}
@@ -42,6 +125,21 @@ paths:
       tags:
       - mailTemplate
   /v1/needies:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Lists all needies
+      tags:
+      - needy
     post:
       parameters:
       - description: Needy information

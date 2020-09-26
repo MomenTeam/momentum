@@ -17,6 +17,8 @@ func init() {
 	database.Setup()
 	mapper.Register(&models.MailTemplate{})
 	mapper.Register(&controllers.MailTemplateForm{})
+	mapper.Register(&models.Needy{})
+	mapper.Register(&controllers.NeedyForm{})
 }
 
 func main() {

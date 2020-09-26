@@ -1,14 +1,22 @@
 package controllers
 
 import (
-	"fmt"
+	"github.com/devfeel/mapper"
 	"github.com/gin-gonic/gin"
 	"github.com/momenteam/momentum/models"
+	"github.com/momenteam/momentum/models/enums"
 	"net/http"
 )
 
 type NeedyForm struct {
-	FirstName       string `json:"firstName"`
+	FirstName     string                  `bson:"firstName" json:"firstName"`
+	LastName      string                  `bson:"lastName" json:"lastName"`
+	PhoneNumber   string                  `bson:"phoneNumber" json:"phoneNumber"`
+	Summary       string                  `bson:"summary" json:"summary"`
+	Priority      int                     `bson:"priority" json:"priority"`
+	Address       models.Address          `bson:"address" json:"address"`
+	NeedyCategory enums.NeedyCategoryType `bson:"needyCategory" json:"needyCategory"`
+	Needs         []models.Need           `bson:"needs" json:"needs"`
 }
 
 // CreateNeedy godoc
@@ -25,7 +33,7 @@ func CreateNeedy(c *gin.Context) {
 
 	needy := &models.Needy{}
 
-	fmt.Println(needyForm)
+	mapper.AutoMapper(needyForm, needy)
 
 	result, err := models.CreateNeedy(*needy)
 	if err != nil {
@@ -41,6 +49,25 @@ func CreateNeedy(c *gin.Context) {
 		"status":  http.StatusOK,
 		"message": "Needy successfully created",
 		"data":    result,
+	})
+	return
+}
+
+// GetAllNeedies godoc
+// @Summary Lists all needies
+// @Tags needy
+// @Produce  json
+// @Success 200 {object} gin.H
+// @Failure 400 {object} gin.H
+// @Router /v1/needies [get]
+func GetAllNeedies(c *gin.Context) {
+	needies, _ := models.GetAllNeedies()
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"count":   len(needies),
+		"message": "All needies listed",
+		"data":    needies,
 	})
 	return
 }

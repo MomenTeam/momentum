@@ -62,6 +62,29 @@ var doc = `{
             }
         },
         "/v1/needies": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "needy"
+                ],
+                "summary": "Lists all needies",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
             "post": {
                 "produces": [
                     "application/json"
@@ -113,7 +136,32 @@ var doc = `{
         "controllers.NeedyForm": {
             "type": "object",
             "properties": {
+                "address": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Address"
+                },
                 "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "needs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Need"
+                    }
+                },
+                "needyCategory": {
+                    "type": "integer"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                },
+                "priority": {
+                    "type": "integer"
+                },
+                "summary": {
                     "type": "string"
                 }
             }
@@ -121,6 +169,106 @@ var doc = `{
         "gin.H": {
             "type": "object",
             "additionalProperties": true
+        },
+        "models.Address": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "district": {
+                    "type": "string"
+                },
+                "firstLine": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                },
+                "postalCode": {
+                    "type": "string"
+                },
+                "secondLine": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Good": {
+            "type": "object",
+            "properties": {
+                "goodCategory": {
+                    "type": "integer"
+                },
+                "isAvailable": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "photoLink": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                }
+            }
+        },
+        "models.LineItem": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "good": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Good"
+                }
+            }
+        },
+        "models.Need": {
+            "type": "object",
+            "properties": {
+                "cancelledAt": {
+                    "type": "string"
+                },
+                "cancelledBy": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "fulfilledAt": {
+                    "type": "string"
+                },
+                "fulfilledBy": {
+                    "description": "TODO: change this",
+                    "type": "string"
+                },
+                "isCancelled": {
+                    "type": "boolean"
+                },
+                "isFulfilled": {
+                    "type": "boolean"
+                },
+                "lineItems": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.LineItem"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
         }
     }
 }`

@@ -5,7 +5,7 @@ import "time"
 type Need struct {
 	Name        string     `bson:"name" json:"name"`
 	Description string     `bson:"description" json:"description"`
-	LineItems   []LineItem `bson:"lineItems" json:"lineItem"`
+	LineItems   []LineItem `bson:"lineItems" json:"lineItems"`
 	Status      bool       `bson:"isFulfilled" json:"isFulfilled"`
 	FulfilledBy string     `bson:"fulfilledBy" json:"fulfilledBy"` //TODO: change this
 	FulfilledAt time.Time  `bson:"fulfilledAt" json:"fulfilledAt"`

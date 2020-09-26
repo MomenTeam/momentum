@@ -17,6 +17,7 @@ func Routes(router *gin.Engine) {
 	needies := router.Group("/v1/needies")
 	{
 		needies.POST("/", controllers.CreateNeedy)
+		needies.GET("/", controllers.GetAllNeedies)
 	}
 
 	mailTemplates := router.Group("/v1/mailTemplates")
@@ -28,7 +29,7 @@ func Routes(router *gin.Engine) {
 		assignees := router.Group("/assignees")
 		{
 			assignees.POST("/", controllers.CreateAssignee)
-			assignees.GET("/", controllers.GetAllAssignees)
+			assignees.GET("/", controllers.GetAllNeedies)
 			assignees.GET("/find-by-id/:id", controllers.GetAssignee) // This is not a good practice but I have to
 			assignees.GET("/find-by-name/:name", controllers.GetAssigneeByName)
 			assignees.DELETE("/:id", controllers.DeleteAssignee)

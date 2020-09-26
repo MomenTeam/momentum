@@ -112,9 +112,7 @@ func DeleteNeedy(id string, cancelledBy string) error {
 }
 
 func mask(s string) string {
-	rs := []rune(s)
-	for i := len(s); i > 1; i-- {
-		rs[i] = '*'
-	}
-	return string(rs)
+	runes := []rune(s)
+	result := string(runes[0:2])
+	return result + "****"
 }

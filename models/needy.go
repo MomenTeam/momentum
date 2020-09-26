@@ -12,17 +12,17 @@ import (
 )
 
 type Needy struct {
-	ID        string             `bson:"_id" json:"id"`
-	FirstName string             `bson:"firstName" json:"firstName"`
-	LastName  string             `bson:"lastName" json:"lastName"`
-	PhoneNumber       string     `bson:"phoneNumber" json:"phoneNumber"`
-	Summary   string             `bson:"summary" json:"summary"`
-	Priority  int                `bson:"priority" json:"priority"`
-	Address   Address            `bson:"address" json:"address"`
-	Category  enums.CategoryType `bson:"category" json:"category"`
-	Needs     []Need             `bson:"category" json:"category"`
-	CreatedBy   string     `bson:"createdBy" json:"createdBy"`
-	CreatedAt   time.Time  `bson:"createdAt" json:"createdAt"`
+	ID            string                  `bson:"_id" json:"id"`
+	FirstName     string                  `bson:"firstName" json:"firstName"`
+	LastName      string                  `bson:"lastName" json:"lastName"`
+	PhoneNumber   string                  `bson:"phoneNumber" json:"phoneNumber"`
+	Summary       string                  `bson:"summary" json:"summary"`
+	Priority      int                     `bson:"priority" json:"priority"`
+	Address       Address                 `bson:"address" json:"address"`
+	NeedyCategory enums.NeedyCategoryType `bson:"needyCategory" json:"needyCategory"`
+	Needs         []Need                  `bson:"category" json:"category"`
+	CreatedBy     string                  `bson:"createdBy" json:"createdBy"`
+	CreatedAt     time.Time               `bson:"createdAt" json:"createdAt"`
 }
 
 func CreateNeedy(needy Needy) (result Needy, err error) {

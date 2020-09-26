@@ -1,6 +1,7 @@
 package models
 
 type LineItem struct {
-	Amount int `bson: "amount"`
-	Price float32 `bson: "price"`
+	Description string `bson:"description" json:"description"`
+	Amount      int    `bson:"amount" json:"amount"`
+	Good        Good   `bson:"good" json:"good"`
 }

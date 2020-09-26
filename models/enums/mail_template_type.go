@@ -3,8 +3,8 @@ package enums
 type MailTemplateType int
 
 const (
-	First	MailTemplateType = 1
-	Second	MailTemplateType = 2
+	First	MailTemplateType = 0
+	Second	MailTemplateType = 1
 )
 
 

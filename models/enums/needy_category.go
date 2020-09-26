@@ -1,6 +1,6 @@
 package enums
 
-type NeedyCategoryType uint
+type NeedyCategoryType int
 
 const (
 	WithChildren NeedyCategoryType = 0

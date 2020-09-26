@@ -9,14 +9,14 @@ import (
 )
 
 type NeedyForm struct {
-	FirstName     string                  `bson:"firstName" json:"firstName"`
-	LastName      string                  `bson:"lastName" json:"lastName"`
-	PhoneNumber   string                  `bson:"phoneNumber" json:"phoneNumber"`
-	Summary       string                  `bson:"summary" json:"summary"`
-	Priority      int                     `bson:"priority" json:"priority"`
-	Address       models.Address          `bson:"address" json:"address"`
-	NeedyCategory enums.NeedyCategoryType `bson:"needyCategory" json:"needyCategory"`
-	Needs         []models.Need           `bson:"needs" json:"needs"`
+	FirstName       string                    `bson:"firstName" json:"firstName"`
+	LastName        string                    `bson:"lastName" json:"lastName"`
+	PhoneNumber     string                    `bson:"phoneNumber" json:"phoneNumber"`
+	Summary         string                    `bson:"summary" json:"summary"`
+	Priority        int                       `bson:"priority" json:"priority"`
+	Address         models.Address            `bson:"address" json:"address"`
+	NeedyCategories []enums.NeedyCategoryType `bson:"needyCategories" json:"needyCategories"`
+	Needs           []models.Need             `bson:"needs" json:"needs"`
 }
 
 // CreateNeedy godoc
@@ -67,6 +67,25 @@ func GetAllNeedies(c *gin.Context) {
 		"status":  http.StatusOK,
 		"count":   len(needies),
 		"message": "All needies listed",
+		"data":    needies,
+	})
+	return
+}
+
+// GetAllNeediesInformations godoc
+// @Summary Lists all needies informations
+// @Tags needy
+// @Produce  json
+// @Success 200 {object} gin.H
+// @Failure 400 {object} gin.H
+// @Router /v1/needies/informations [get]
+func GetAllNeediesInformations(c *gin.Context) {
+	needies, _ := models.GetAllNeediesInformations()
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"count":   len(needies),
+		"message": "All needies informations listed",
 		"data":    needies,
 	})
 	return

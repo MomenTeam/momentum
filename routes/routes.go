@@ -18,6 +18,7 @@ func Routes(router *gin.Engine) {
 	{
 		needies.POST("/", controllers.CreateNeedy)
 		needies.GET("/", controllers.GetAllNeedies)
+		needies.GET("/informations", controllers.GetAllNeediesInformations)
 	}
 
 	mailTemplates := router.Group("/v1/mailTemplates")

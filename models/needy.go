@@ -3,6 +3,7 @@ package models
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/momenteam/momentum/database"
 	"github.com/momenteam/momentum/models/enums"
@@ -12,17 +13,24 @@ import (
 )
 
 type Needy struct {
-	ID            string                  `bson:"_id" json:"id"`
-	FirstName     string                  `bson:"firstName" json:"firstName"`
-	LastName      string                  `bson:"lastName" json:"lastName"`
-	PhoneNumber   string                  `bson:"phoneNumber" json:"phoneNumber"`
-	Summary       string                  `bson:"summary" json:"summary"`
-	Priority      int                     `bson:"priority" json:"priority"`
-	Address       Address                 `bson:"address" json:"address"`
-	NeedyCategory enums.NeedyCategoryType `bson:"needyCategory" json:"needyCategory"`
-	Needs         []Need                  `bson:"category" json:"category"`
-	CreatedBy     string                  `bson:"createdBy" json:"createdBy"`
-	CreatedAt     time.Time               `bson:"createdAt" json:"createdAt"`
+	ID              string                    `bson:"_id" json:"id"`
+	FirstName       string                    `bson:"firstName" json:"firstName"`
+	LastName        string                    `bson:"lastName" json:"lastName"`
+	PhoneNumber     string                    `bson:"phoneNumber" json:"phoneNumber"`
+	Summary         string                    `bson:"summary" json:"summary"`
+	Priority        int                       `bson:"priority" json:"priority"`
+	Address         Address                   `bson:"address" json:"address"`
+	NeedyCategories []enums.NeedyCategoryType `bson:"needyCategories" json:"needyCategories"`
+	Needs           []Need                    `bson:"category" json:"category"`
+	CreatedBy       string                    `bson:"createdBy" json:"createdBy"`
+	CreatedAt       time.Time                 `bson:"createdAt" json:"createdAt"`
+}
+
+type NeedyInformation struct {
+	FullName   string                    `json:"fullName"`
+	Address    string                    `json:"address"`
+	Categories []enums.NeedyCategoryType `json:"needyCategories"`
+	Summary    string                    `json:"summary"`
 }
 
 func CreateNeedy(needy Needy) (result Needy, err error) {
@@ -37,6 +45,31 @@ func CreateNeedy(needy Needy) (result Needy, err error) {
 	_, err = database.NeediesCollection.InsertOne(context.Background(), needy)
 
 	return needy, err
+}
+
+func GetAllNeediesInformations() ([]NeedyInformation, error) {
+	var neediesInformation []NeedyInformation
+
+	cursor, err := database.NeediesCollection.Find(context.TODO(), bson.D{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	for cursor.Next(context.Background()) {
+		var needy Needy
+		if err = cursor.Decode(&needy); err != nil {
+			log.Fatal(err)
+		}
+		needyInformation := NeedyInformation{
+			FullName:   fmt.Sprintf("%s %s", mask(needy.FirstName), mask(needy.LastName)),
+			Address:    fmt.Sprintf("%s, %s", needy.Address.District, needy.Address.City),
+			Summary:    needy.Summary,
+			Categories: needy.NeedyCategories,
+		}
+
+		neediesInformation = append(neediesInformation, needyInformation)
+	}
+
+	return neediesInformation, err
 }
 
 func GetAllNeedies() ([]Needy, error) {
@@ -76,4 +109,12 @@ func DeleteNeedy(id string, cancelledBy string) error {
 	)
 
 	return err
+}
+
+func mask(s string) string {
+	rs := []rune(s)
+	for i := len(s); i > 1; i-- {
+		rs[i] = '*'
+	}
+	return string(rs)
 }

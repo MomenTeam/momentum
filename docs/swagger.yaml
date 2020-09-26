@@ -19,7 +19,7 @@ definitions:
         items:
           $ref: '#/definitions/models.Need'
         type: array
-      needyCategory:
+      needyCategories:
         type: integer
       phoneNumber:
         type: string
@@ -160,6 +160,22 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Creates needy
+      tags:
+      - needy
+  /v1/needies/informations:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Lists all needies informations
       tags:
       - needy
 swagger: "2.0"

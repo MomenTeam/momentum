@@ -13,8 +13,8 @@ import (
 var Client *mongo.Client
 var Context context.Context
 var CancelFunc context.CancelFunc
-var CandidatesCollection *mongo.Collection
-var AssigneeCollection *mongo.Collection
+var NeediesCollection *mongo.Collection
+var MailTemplateCollection *mongo.Collection
 
 func Setup() {
 	Client, Context, CancelFunc = getConnection(configs.GlobalConfig.Database.ConnectionString)
@@ -42,5 +42,6 @@ func getCollections() {
 	databaseName := configs.GlobalConfig.Database.DatabaseName
 	database := Client.Database(databaseName)
 
-	CandidatesCollection = database.Collection("test")
+	NeediesCollection = database.Collection("Needies")
+	MailTemplateCollection = database.Collection("MailTemplates")
 }

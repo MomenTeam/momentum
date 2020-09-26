@@ -1,0 +1,67 @@
+definitions:
+  controllers.MailTemplateForm:
+    properties:
+      mailTemplateType:
+        type: integer
+      template:
+        type: string
+    type: object
+  controllers.NeedyForm:
+    properties:
+      firstName:
+        type: string
+    type: object
+  gin.H:
+    additionalProperties: true
+    type: object
+info:
+  contact: {}
+  license: {}
+paths:
+  /v1/mailTemplates:
+    post:
+      parameters:
+      - description: Mail template information
+        in: body
+        name: mailTemplate
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.MailTemplateForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Creates mail templates
+      tags:
+      - mailTemplate
+  /v1/needies:
+    post:
+      parameters:
+      - description: Needy information
+        in: body
+        name: needy
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.NeedyForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Creates needy
+      tags:
+      - needy
+swagger: "2.0"

@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"github.com/momenteam/momentum/controllers"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,16 +14,26 @@ func Routes(router *gin.Engine) {
 	router.GET("/", welcome)
 	router.NoRoute(notFound)
 
-	/*
-	assignees := router.Group("/assignees")
+	needies := router.Group("/v1/needies")
 	{
-		assignees.POST("/", controllers.CreateAssignee)
-		assignees.GET("/", controllers.GetAllAssignees)
-		assignees.GET("/find-by-id/:id", controllers.GetAssignee) // This is not a good practice but I have to
-		assignees.GET("/find-by-name/:name", controllers.GetAssigneeByName)
-		assignees.DELETE("/:id", controllers.DeleteAssignee)
+		needies.POST("/", controllers.CreateNeedy)
 	}
-	 */
+
+	mailTemplates := router.Group("/v1/mailTemplates")
+	{
+		mailTemplates.POST("/", controllers.CreateMailTemplate)
+	}
+
+	/*
+		assignees := router.Group("/assignees")
+		{
+			assignees.POST("/", controllers.CreateAssignee)
+			assignees.GET("/", controllers.GetAllAssignees)
+			assignees.GET("/find-by-id/:id", controllers.GetAssignee) // This is not a good practice but I have to
+			assignees.GET("/find-by-name/:name", controllers.GetAssigneeByName)
+			assignees.DELETE("/:id", controllers.DeleteAssignee)
+		}
+	*/
 }
 
 func welcome(c *gin.Context) {

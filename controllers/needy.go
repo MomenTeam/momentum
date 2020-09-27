@@ -1,22 +1,21 @@
 package controllers
 
 import (
-	"github.com/devfeel/mapper"
 	"github.com/gin-gonic/gin"
 	"github.com/momenteam/momentum/models"
 	"github.com/momenteam/momentum/models/enums"
 	"net/http"
+	"time"
 )
 
 type NeedyForm struct {
-	FirstName       string                    `bson:"firstName" json:"firstName"`
-	LastName        string                    `bson:"lastName" json:"lastName"`
-	PhoneNumber     string                    `bson:"phoneNumber" json:"phoneNumber"`
-	Summary         string                    `bson:"summary" json:"summary"`
-	Priority        int                       `bson:"priority" json:"priority"`
-	Address         models.Address            `bson:"address" json:"address"`
-	NeedyCategories []enums.NeedyCategoryType `bson:"needyCategories" json:"needyCategories"`
-	Needs           []models.Need             `bson:"needs" json:"needs"`
+	FirstName       string         `bson:"firstName" json:"firstName"`
+	LastName        string         `bson:"lastName" json:"lastName"`
+	PhoneNumber     string         `bson:"phoneNumber" json:"phoneNumber"`
+	Summary         string         `bson:"summary" json:"summary"`
+	Priority        int            `bson:"priority" json:"priority"`
+	Address         models.Address `bson:"address" json:"address"`
+	NeedyCategories []int          `bson:"needyCategories" json:"needyCategories"`
 }
 
 // CreateNeedy godoc
@@ -29,11 +28,31 @@ type NeedyForm struct {
 // @Router /v1/needies [post]
 func CreateNeedy(c *gin.Context) {
 	needyForm := &NeedyForm{}
-	c.BindJSON(&needyForm)
+	err := c.BindJSON(&needyForm)
 
-	needy := &models.Needy{}
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Needy cannot be created",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-	mapper.AutoMapper(needyForm, needy)
+	needy := &models.Needy{
+		FirstName:       needyForm.FirstName,
+		LastName:        needyForm.LastName,
+		PhoneNumber:     needyForm.PhoneNumber,
+		Summary:         needyForm.Summary,
+		Priority:        needyForm.Priority,
+		Address:         needyForm.Address,
+		CreatedBy:       "", //TODO: edit this
+		CreatedAt:       time.Now(),
+	}
+
+	for _, needyCategory := range needyForm.NeedyCategories {
+		needy.NeedyCategories = append(needy.NeedyCategories, enums.GenerateNeedyCategoryFromInt(needyCategory))
+	}
 
 	result, err := models.CreateNeedy(*needy)
 	if err != nil {

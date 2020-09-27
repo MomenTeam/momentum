@@ -25,7 +25,7 @@ func main() {
 	docs.SwaggerInfo.Title = "Momentum"
 	docs.SwaggerInfo.Description = "Momentum"
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "localhost:" + configs.GlobalConfig.Server.Port
+	docs.SwaggerInfo.Host = configs.GlobalConfig.AppBaseBath
 	router := gin.Default()
 
 	routes.Routes(router)

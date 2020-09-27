@@ -8,6 +8,7 @@ import (
 
 // Config struct
 type Config struct {
+	AppBaseBath string
 	Environment string
 	Database    struct {
 		ConnectionString string `json:"connectionString"`
@@ -55,6 +56,7 @@ func loadConfiguration(environment string) (*Config, error) {
 	jsonParser := json.NewDecoder(configFile)
 	jsonParser.Decode(&config)
 	config.Environment = environment
+	config.AppBaseBath = os.Getenv("APP_BASE_PATH")
 
 	return config, err
 }

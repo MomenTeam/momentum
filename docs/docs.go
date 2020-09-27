@@ -171,14 +171,11 @@ var doc = `{
                 "lastName": {
                     "type": "string"
                 },
-                "needs": {
+                "needyCategories": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.Need"
+                        "type": "integer"
                     }
-                },
-                "needyCategories": {
-                    "type": "integer"
                 },
                 "phoneNumber": {
                     "type": "string"
@@ -220,77 +217,6 @@ var doc = `{
                     "type": "string"
                 },
                 "secondLine": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.Good": {
-            "type": "object",
-            "properties": {
-                "goodCategory": {
-                    "type": "integer"
-                },
-                "isAvailable": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "photoLink": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "number"
-                }
-            }
-        },
-        "models.LineItem": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "integer"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "good": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.Good"
-                }
-            }
-        },
-        "models.Need": {
-            "type": "object",
-            "properties": {
-                "cancelledAt": {
-                    "type": "string"
-                },
-                "cancelledBy": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "fulfilledAt": {
-                    "type": "string"
-                },
-                "fulfilledBy": {
-                    "description": "TODO: change this",
-                    "type": "string"
-                },
-                "isCancelled": {
-                    "type": "boolean"
-                },
-                "isFulfilled": {
-                    "type": "boolean"
-                },
-                "lineItems": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.LineItem"
-                    }
-                },
-                "name": {
                     "type": "string"
                 }
             }

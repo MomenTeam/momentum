@@ -8,6 +8,7 @@ import (
 	"github.com/momenteam/momentum/database"
 	"github.com/momenteam/momentum/models/enums"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"time"
 )
@@ -21,7 +22,7 @@ type Needy struct {
 	Priority        int                       `bson:"priority" json:"priority"`
 	Address         Address                   `bson:"address" json:"address"`
 	NeedyCategories []enums.NeedyCategoryType `bson:"needyCategories" json:"needyCategories"`
-	Needs           []Need                    `bson:"category" json:"category"`
+	Needs           []primitive.ObjectID      `bson:"category" json:"category"`
 	CreatedBy       string                    `bson:"createdBy" json:"createdBy"`
 	CreatedAt       time.Time                 `bson:"createdAt" json:"createdAt"`
 }

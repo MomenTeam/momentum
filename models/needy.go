@@ -158,29 +158,34 @@ func GetNeedyDetail(id string) (NeedyDetail, error) {
 
 	var needs []Need
 	cursor, err := database.NeedCollection.Find(context.Background(), needFilter)
-	for cursor.Next(context.Background()) {
-		var need Need
-		if err = cursor.Decode(&need); err != nil {
-			log.Fatal(err)
+
+	if cursor != nil {
+		for cursor.Next(context.Background()) {
+			var need Need
+			if err = cursor.Decode(&need); err != nil {
+				log.Fatal(err)
+			}
+			needs = append(needs, need)
 		}
-		needs = append(needs, need)
+
+		needyDetail := NeedyDetail{
+			ID:              needy.ID,
+			FirstName:       needy.FirstName,
+			LastName:        needy.LastName,
+			PhoneNumber:     needy.PhoneNumber,
+			Summary:         needy.Summary,
+			Priority:        needy.Priority,
+			Address:         needy.Address,
+			NeedyCategories: needy.NeedyCategories,
+			Needs:           needs,
+			CreatedBy:       needy.CreatedBy,
+			CreatedAt:       needy.CreatedAt,
+		}
+
+		return needyDetail, err
 	}
 
-	needyDetail := NeedyDetail{
-		ID:              needy.ID,
-		FirstName:       needy.FirstName,
-		LastName:        needy.LastName,
-		PhoneNumber:     needy.PhoneNumber,
-		Summary:         needy.Summary,
-		Priority:        needy.Priority,
-		Address:         needy.Address,
-		NeedyCategories: needy.NeedyCategories,
-		Needs:           needs,
-		CreatedBy:       needy.CreatedBy,
-		CreatedAt:       needy.CreatedAt,
-	}
-
-	return needyDetail, err
+	return NeedyDetail{}, err
 }
 
 func DeleteNeedy(id string, cancelledBy string) error {

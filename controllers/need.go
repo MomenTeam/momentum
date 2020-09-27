@@ -16,3 +16,10 @@ type LineItemForm struct {
 	Amount      int         `bson:"amount" json:"amount"`
 	Good        models.Good `bson:"good" json:"good"`
 }
+
+type PaymentForm struct {
+	CreditCardNumber string
+	Cvv string
+	ExpireDate string
+
+}

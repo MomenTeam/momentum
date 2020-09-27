@@ -118,21 +118,6 @@ paths:
       tags:
       - mailTemplate
   /v1/needies:
-    get:
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/gin.H'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Lists all needies
-      tags:
-      - needy
     post:
       parameters:
       - description: Needy information
@@ -181,6 +166,22 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Add need to needy
+      tags:
+      - needy
+  /v1/needies/getAll:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Lists all needies
       tags:
       - needy
   /v1/needies/getNeedyDetail/{id}:

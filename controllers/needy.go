@@ -78,7 +78,7 @@ func CreateNeedy(c *gin.Context) {
 // @Produce  json
 // @Success 200 {object} gin.H
 // @Failure 400 {object} gin.H
-// @Router /v1/needies [get]
+// @Router /v1/needies/getAll [get]
 func GetAllNeedies(c *gin.Context) {
 	needies, _ := models.GetAllNeedies()
 

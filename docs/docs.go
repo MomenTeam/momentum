@@ -62,29 +62,6 @@ var doc = `{
             }
         },
         "/v1/needies": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "needy"
-                ],
-                "summary": "Lists all needies",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            },
             "post": {
                 "produces": [
                     "application/json"
@@ -104,6 +81,31 @@ var doc = `{
                         }
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/needies/getAll": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "needy"
+                ],
+                "summary": "Lists all needies",
                 "responses": {
                     "200": {
                         "description": "OK",

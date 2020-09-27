@@ -2,13 +2,11 @@ package routes
 
 import (
 	"github.com/gin-contrib/cors"
-	"github.com/momenteam/momentum/controllers"
-	"net/http"
-	"time"
-
 	"github.com/gin-gonic/gin"
+	"github.com/momenteam/momentum/controllers"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
+	"net/http"
 )
 
 func Routes(router *gin.Engine) {
@@ -16,17 +14,7 @@ func Routes(router *gin.Engine) {
 	router.GET("/", welcome)
 	router.NoRoute(notFound)
 
-	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"PUT", "PATCH", "POST"},
-		AllowHeaders:     []string{"Origin"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-		AllowOriginFunc: func(origin string) bool {
-			return origin == "*"
-		},
-		MaxAge: 24 * time.Hour,
-	}))
+	router.Use(cors.Default()) //Allows all origins
 
 	needies := router.Group("/v1/needies")
 	{

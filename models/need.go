@@ -3,6 +3,7 @@ package models
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/momenteam/momentum/database"
 	"github.com/momenteam/momentum/models/enums"
@@ -26,6 +27,22 @@ type Need struct {
 	CancelledAt time.Time        `bson:"cancelledAt" json:"cancelledAt"`
 	CancelledBy string           `bson:"cancelledBy" json:"cancelledBy"` //TODO: edit
 	CreatedAt   time.Time        `bson:"createdAt" json:"createdAt"`
+}
+
+type NeedLineItemDetailDto struct {
+	Amount int `json:"amount"`
+	Id     int `json:"id"`
+}
+
+type NeedDetailDto struct {
+	ID          string                  `json:"id"`
+	FullName    string                  `json:"fullName"`
+	FullAddress string                  `json:"fullAddress"`
+	Name        string                  `json:"name"`
+	LineItems   []NeedLineItemDetailDto `json:"lineItems"`
+	PaidBy      string                  `json:"payerName"`
+	PayerEmail  string                  `json:"payerEmail"`
+	Status      enums.NeedStatus        `json:"status"`
 }
 
 func CreateNeed(need Need) (result Need, err error) {
@@ -120,7 +137,7 @@ func GetNeed(id string) (Need, error) {
 func CancelNeed(id string) (result string, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			err = errors.New("need create error")
+			err = errors.New("need cancel error")
 		}
 	}()
 
@@ -134,4 +151,51 @@ func CancelNeed(id string) (result string, err error) {
 	)
 
 	return id, err
+}
+
+func GetAllNeedDetails() (result []NeedDetailDto, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("get need details error")
+		}
+	}()
+
+	var needDetails []NeedDetailDto
+	needs, err := GetAllNeeds()
+
+	for _, need := range needs {
+		needy, err := GetNeedyByNeedId(need.ID)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		var lineItems []NeedLineItemDetailDto
+		for _, lineItem := range need.LineItems {
+			lineItems = append(lineItems, NeedLineItemDetailDto{
+				Amount: lineItem.Amount,
+				Id:     lineItem.Good.GoodId,
+			})
+		}
+
+		needDetail := NeedDetailDto{
+			ID:          need.ID,
+			FullName:    fmt.Sprintf("%s %s", needy.FirstName, needy.LastName),
+			FullAddress: getFullAddress(needy.Address),
+			Name:        need.Name,
+			LineItems:   lineItems,
+			PaidBy:      need.PaidBy,
+			PayerEmail:  need.PayerEmail,
+			Status:      need.Status,
+		}
+
+		needDetails = append(needDetails, needDetail)
+	}
+
+	return needDetails, err
+}
+
+func getFullAddress(address Address) string {
+	return fmt.Sprintf("%s %s %s %s/%s",
+		address.FirstLine, address.SecondLine, address.PostalCode, address.District, address.City)
 }

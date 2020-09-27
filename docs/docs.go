@@ -249,15 +249,40 @@ var doc = `{
                 }
             }
         },
-        "/v1/needs/{needId}/cancel": {
-            "delete": {
+        "/v1/needs/getAllDetails": {
+            "get": {
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "need"
                 ],
-                "summary": "Cancels need",
+                "summary": "Lists all needs",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/needs/setFulfilled/{needId}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "need"
+                ],
+                "summary": "Set need as fulfilled",
                 "parameters": [
                     {
                         "type": "string",
@@ -283,15 +308,15 @@ var doc = `{
                 }
             }
         },
-        "/v1/needs/{needId}/setFulfilled": {
-            "get": {
+        "/v1/needs/{needId}/cancel": {
+            "delete": {
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "need"
                 ],
-                "summary": "Set need as fulfilled",
+                "summary": "Cancels need",
                 "parameters": [
                     {
                         "type": "string",

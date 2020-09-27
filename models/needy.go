@@ -9,6 +9,7 @@ import (
 	"github.com/momenteam/momentum/models/enums"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -150,6 +151,19 @@ func GetAllNeedies() ([]Needy, error) {
 func GetNeedy(id string) (Needy, error) {
 	needy := Needy{}
 	err := database.NeediesCollection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&needy)
+
+	return needy, err
+}
+
+func GetNeedyByNeedId(id string) (Needy, error) {
+	needy := Needy{}
+	needies, err := GetAllNeedies()
+
+	for _, needy := range needies {
+		if strings.Contains(strings.Join(needy.Needs, ","), id) {
+			return needy, err
+		}
+	}
 
 	return needy, err
 }

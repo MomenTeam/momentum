@@ -47,6 +47,25 @@ func GetAllNeeds(c *gin.Context) {
 	return
 }
 
+// GetAllNeedDetails godoc
+// @Summary Lists all needs
+// @Tags need
+// @Produce  json
+// @Success 200 {object} gin.H
+// @Failure 400 {object} gin.H
+// @Router /v1/needs/getAllDetails [get]
+func GetAllNeedDetails(c *gin.Context) {
+	needs, _ := models.GetAllNeedDetails()
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"count":   len(needs),
+		"message": "All needs listed",
+		"data":    needs,
+	})
+	return
+}
+
 // PayForNeed godoc
 // @Summary Pay need
 // @Tags need
@@ -96,7 +115,7 @@ func PayForNeed(c *gin.Context) {
 // @Param needId path string true "ID"
 // @Success 200 {object} gin.H
 // @Failure 400 {object} gin.H
-// @Router /v1/needs/{needId}/setFulfilled [get]
+// @Router /v1/needs/setFulfilled/{needId} [get]
 func SetFulfilled(c *gin.Context) {
 	needId := c.Param("needId")
 

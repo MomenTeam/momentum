@@ -30,7 +30,8 @@ func Routes(router *gin.Engine) {
 	needs := router.Group("/v1/needs")
 	{
 		needs.GET("/", controllers.GetAllNeeds)
-		needs.GET("/:needId/setFulfilled", controllers.SetFulfilled)
+		needs.GET("/getAllDetails", controllers.GetAllNeedDetails)
+		needs.GET("/setFulfilled/:needId", controllers.SetFulfilled)
 		needs.DELETE("/:needId/cancel", controllers.CancelNeed)
 	}
 

@@ -111,3 +111,28 @@ func SetFulfilled(c *gin.Context) {
 
 	return
 }
+
+// Cancel godoc
+// @Summary Cancels need
+// @Tags need
+// @Produce json
+// @Param needId path string true "ID"
+// @Success 200 {object} gin.H
+// @Failure 400 {object} gin.H
+// @Router /v1/needs/{needId}/cancel [delete]
+func CancelNeed(c *gin.Context) {
+	needId := c.Param("needId")
+
+	_, err := models.CancelNeed(needId)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Cancel error",
+			"error":   err.Error(),
+		})
+	}
+
+	return
+}
+

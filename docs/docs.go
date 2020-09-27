@@ -247,6 +247,40 @@ var doc = `{
                 }
             }
         },
+        "/v1/needs/{needId}/cancel": {
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "need"
+                ],
+                "summary": "Cancels need",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "needId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/needs/{needId}/setFulfilled": {
             "get": {
                 "produces": [

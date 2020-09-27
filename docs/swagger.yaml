@@ -235,6 +235,28 @@ paths:
       summary: Lists all needs
       tags:
       - need
+  /v1/needs/{needId}/cancel:
+    delete:
+      parameters:
+      - description: ID
+        in: path
+        name: needId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Cancels need
+      tags:
+      - need
   /v1/needs/{needId}/setFulfilled:
     get:
       parameters:

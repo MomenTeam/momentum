@@ -21,7 +21,6 @@ type Need struct {
 	FulfilledAt time.Time        `bson:"fulfilledAt" json:"fulfilledAt"`
 	PaidAt      time.Time        `bson:"paidAt" json:"paidAt"`
 	PaidBy      string           `bson:"paidBy" json:"paidBy"`
-	IsCancelled bool             `bson:"isCancelled" json:"isCancelled"`
 	CancelledAt time.Time        `bson:"cancelledAt" json:"cancelledAt"`
 	CancelledBy string           `bson:"cancelledBy" json:"cancelledBy"` //TODO: edit
 	CreatedAt   time.Time        `bson:"createdAt" json:"createdAt"`
@@ -88,6 +87,25 @@ func SetFulfilled(id string) (result string, err error) {
 
 	filter := bson.M{"_id": bson.M{"$eq": id}}
 	update := bson.M{"$set": bson.M{"status": enums.NeedFulfilled, "fulfilledAt": time.Now()}}
+
+	_, err = database.NeedCollection.UpdateOne(
+		context.Background(),
+		filter,
+		update,
+	)
+
+	return id, err
+}
+
+func CancelNeed(id string) (result string, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("need create error")
+		}
+	}()
+
+	filter := bson.M{"_id": bson.M{"$eq": id}}
+	update := bson.M{"$set": bson.M{"status": enums.NeedCancelled, "cancelledAt": time.Now()}}
 
 	_, err = database.NeedCollection.UpdateOne(
 		context.Background(),

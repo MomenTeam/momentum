@@ -31,6 +31,7 @@ func Routes(router *gin.Engine) {
 	{
 		needs.GET("/", controllers.GetAllNeeds)
 		needs.GET("/:needId/setFulfilled", controllers.SetFulfilled)
+		needs.DELETE("/:needId/cancel", controllers.CancelNeed)
 	}
 
 	payment := router.Group("/v1/payment")

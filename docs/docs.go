@@ -445,6 +445,9 @@ var doc = `{
                 "cvv": {
                     "type": "string"
                 },
+                "email": {
+                    "type": "string"
+                },
                 "expireDate": {
                     "type": "string"
                 },

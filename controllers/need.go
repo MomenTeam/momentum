@@ -25,6 +25,7 @@ type PaymentForm struct {
 	Cvv              string `json:"cvv"`
 	ExpireDate       string `json:"expireDate"`
 	FullName         string `json:"fullName"`
+	Email            string `json:"email"`
 }
 
 // GetAllNeeds godoc
@@ -70,7 +71,7 @@ func PayForNeed(c *gin.Context) {
 		return
 	}
 
-	payment, err := models.PayNeed(needId, paymentForm.FullName)
+	payment, err := models.PayNeed(needId, paymentForm.FullName, paymentForm.Email)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -135,4 +136,3 @@ func CancelNeed(c *gin.Context) {
 
 	return
 }
-

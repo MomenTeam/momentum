@@ -39,6 +39,8 @@ type NeedyDetail struct {
 	ID              string                    `json:"id"`
 	FirstName       string                    `json:"firstName"`
 	LastName        string                    `json:"lastName"`
+	ShortName       string                    `json:"shortName"`
+	MaskedName      string                    `json:"maskedName"`
 	PhoneNumber     string                    `json:"phoneNumber"`
 	Summary         string                    `json:"summary"`
 	Priority        int                       `json:"priority"`
@@ -118,7 +120,7 @@ func GetAllNeediesInformations() ([]NeedyInformation, error) {
 			Address:    fmt.Sprintf("%s, %s", needy.Address.District, needy.Address.City),
 			Summary:    needy.Summary,
 			Categories: needy.NeedyCategories,
-			ShortName: fmt.Sprintf("%c%c", needy.FirstName[0], needy.LastName[0]),
+			ShortName:  fmt.Sprintf("%c%c", needy.FirstName[0], needy.LastName[0]),
 		}
 
 		neediesInformation = append(neediesInformation, needyInformation)
@@ -174,6 +176,8 @@ func GetNeedyDetail(id string) (NeedyDetail, error) {
 			ID:              needy.ID,
 			FirstName:       needy.FirstName,
 			LastName:        needy.LastName,
+			ShortName:  fmt.Sprintf("%c%c", needy.FirstName[0], needy.LastName[0]),
+			MaskedName:        fmt.Sprintf("%s %s", mask(needy.FirstName), mask(needy.LastName)),
 			PhoneNumber:     needy.PhoneNumber,
 			Summary:         needy.Summary,
 			Priority:        needy.Priority,

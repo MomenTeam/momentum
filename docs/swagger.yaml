@@ -49,6 +49,17 @@ definitions:
       summary:
         type: string
     type: object
+  controllers.PaymentForm:
+    properties:
+      creditCardNumber:
+        type: string
+      cvv:
+        type: string
+      expireDate:
+        type: string
+      fullName:
+        type: string
+    type: object
   gin.H:
     additionalProperties: true
     type: object
@@ -224,14 +235,42 @@ paths:
       summary: Lists all needs
       tags:
       - need
-  /v1/payment/{id}:
+  /v1/needs/{needId}/setFulfilled:
+    get:
+      parameters:
+      - description: ID
+        in: path
+        name: needId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Set need as fulfilled
+      tags:
+      - need
+  /v1/payment/{needId}:
     post:
       parameters:
       - description: ID
         in: path
-        name: id
+        name: needId
         required: true
         type: string
+      - description: Payment information
+        in: body
+        name: payment
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PaymentForm'
       produces:
       - application/json
       responses:

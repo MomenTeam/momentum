@@ -247,7 +247,41 @@ var doc = `{
                 }
             }
         },
-        "/v1/payment/{id}": {
+        "/v1/needs/{needId}/setFulfilled": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "need"
+                ],
+                "summary": "Set need as fulfilled",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "needId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/payment/{needId}": {
             "post": {
                 "produces": [
                     "application/json"
@@ -260,9 +294,18 @@ var doc = `{
                     {
                         "type": "string",
                         "description": "ID",
-                        "name": "id",
+                        "name": "needId",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "Payment information",
+                        "name": "payment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PaymentForm"
+                        }
                     }
                 ],
                 "responses": {
@@ -355,6 +398,23 @@ var doc = `{
                     "type": "integer"
                 },
                 "summary": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.PaymentForm": {
+            "type": "object",
+            "properties": {
+                "creditCardNumber": {
+                    "type": "string"
+                },
+                "cvv": {
+                    "type": "string"
+                },
+                "expireDate": {
+                    "type": "string"
+                },
+                "fullName": {
                     "type": "string"
                 }
             }

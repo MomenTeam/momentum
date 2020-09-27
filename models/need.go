@@ -5,24 +5,26 @@ import (
 	"errors"
 	"github.com/google/uuid"
 	"github.com/momenteam/momentum/database"
+	"github.com/momenteam/momentum/models/enums"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
 	"time"
 )
 
 type Need struct {
-	ID          string     `bson:"_id" json:"id"`
-	Name        string     `bson:"name" json:"name"`
-	Description string     `bson:"description" json:"description"`
-	LineItems   []LineItem `bson:"lineItems" json:"lineItems"`
-	IsFulfilled bool       `bson:"isFulfilled" json:"isFulfilled"`
-	Priority    int        `bson:"priority" json:"priority"`
-	FulfilledBy string     `bson:"fulfilledBy" json:"fulfilledBy"` //TODO: change this
-	FulfilledAt time.Time  `bson:"fulfilledAt" json:"fulfilledAt"`
-	IsCancelled bool       `bson:"isCancelled" json:"isCancelled"`
-	CancelledAt time.Time  `bson:"cancelledAt" json:"cancelledAt"`
-	CancelledBy string     `bson:"cancelledBy" json:"cancelledBy"`
-	CreatedAt   time.Time  `bson:"createdAt" json:"createdAt"`
+	ID          string           `bson:"_id" json:"id"`
+	Name        string           `bson:"name" json:"name"`
+	Description string           `bson:"description" json:"description"`
+	LineItems   []LineItem       `bson:"lineItems" json:"lineItems"`
+	Status      enums.NeedStatus `bson:"status" json:"status"`
+	Priority    int              `bson:"priority" json:"priority"`
+	FulfilledAt time.Time        `bson:"fulfilledAt" json:"fulfilledAt"`
+	PaidAt      time.Time        `bson:"paidAt" json:"paidAt"`
+	PaidBy      string           `bson:"paidBy" json:"paidBy"`
+	IsCancelled bool             `bson:"isCancelled" json:"isCancelled"`
+	CancelledAt time.Time        `bson:"cancelledAt" json:"cancelledAt"`
+	CancelledBy string           `bson:"cancelledBy" json:"cancelledBy"` //TODO: edit
+	CreatedAt   time.Time        `bson:"createdAt" json:"createdAt"`
 }
 
 func CreateNeed(need Need) (result Need, err error) {
@@ -33,13 +35,14 @@ func CreateNeed(need Need) (result Need, err error) {
 	}()
 
 	need.ID = uuid.New().String()
+	need.Status = enums.NeedCreated
 
 	_, err = database.NeedCollection.InsertOne(context.Background(), need)
 
 	return need, err
 }
 
-func PayNeed(id string, fulfilledBy string) (result string, err error) {
+func PayNeed(id string, paidBy string) (result string, err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = errors.New("need create error")
@@ -47,7 +50,7 @@ func PayNeed(id string, fulfilledBy string) (result string, err error) {
 	}()
 
 	filter := bson.M{"_id": bson.M{"$eq": id}}
-	update := bson.M{"$set": bson.M{"isFulfilled": true, "fulfilledAt": time.Now(), "fulfilledBy": fulfilledBy}}
+	update := bson.M{"$set": bson.M{"status": enums.NeedPaid, "paidAt": time.Now(), "paidBy": paidBy}}
 
 	_, err = database.NeedCollection.UpdateOne(
 		context.Background(),
@@ -74,4 +77,23 @@ func GetAllNeeds() (result []Need, err error) {
 	}
 
 	return needs, err
+}
+
+func SetFulfilled(id string) (result string, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("need create error")
+		}
+	}()
+
+	filter := bson.M{"_id": bson.M{"$eq": id}}
+	update := bson.M{"$set": bson.M{"status": enums.NeedFulfilled, "fulfilledAt": time.Now()}}
+
+	_, err = database.NeedCollection.UpdateOne(
+		context.Background(),
+		filter,
+		update,
+	)
+
+	return id, err
 }

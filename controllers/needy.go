@@ -130,47 +130,6 @@ func GetNeedyDetail(c *gin.Context) {
 	return
 }
 
-// PayForNeed godoc
-// @Summary Pay need
-// @Tags need
-// @Produce json
-// @Param id path string true "ID"
-// @Success 200 {object} gin.H
-// @Failure 400 {object} gin.H
-// @Router /v1/payment/{id} [post]
-func PayForNeed(c *gin.Context) {
-	needId := c.Param("id")
-
-	paymentForm := &PaymentForm{}
-	err := c.BindJSON(&paymentForm)
-
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status":  http.StatusBadRequest,
-			"message": "Payment cannot be read",
-			"error":   err.Error(),
-		})
-		return
-	}
-
-	payment, err := models.PayNeed(needId, paymentForm.FullName)
-
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status":  http.StatusBadRequest,
-			"message": "Payment error",
-			"error":   err.Error(),
-		})
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"status":  http.StatusOK,
-		"message": "Payment successful",
-		"data":    payment,
-	})
-	return
-}
-
 // AddNeed godoc
 // @Summary Add need to needy
 // @Tags needy
@@ -216,7 +175,6 @@ func AddNeed(c *gin.Context) {
 		Name:        needForm.Name,
 		Description: needForm.Description,
 		LineItems:   lineItems,
-		IsFulfilled: false,
 		Priority:    needForm.Priority,
 		IsCancelled: false,
 		CreatedAt: time.Now(),

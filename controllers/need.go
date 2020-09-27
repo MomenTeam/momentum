@@ -21,10 +21,10 @@ type LineItemForm struct {
 }
 
 type PaymentForm struct {
-	CreditCardNumber string `json:"creditCardNumer"`
-	Cvv string `json:"cvv"`
-	ExpireDate string `json:"expireDate"`
-	FullName string `json:"fullName"`
+	CreditCardNumber string `json:"creditCardNumber"`
+	Cvv              string `json:"cvv"`
+	ExpireDate       string `json:"expireDate"`
+	FullName         string `json:"fullName"`
 }
 
 // GetAllNeeds godoc
@@ -43,5 +43,71 @@ func GetAllNeeds(c *gin.Context) {
 		"message": "All needs listed",
 		"data":    needs,
 	})
+	return
+}
+
+// PayForNeed godoc
+// @Summary Pay need
+// @Tags need
+// @Produce json
+// @Param needId path string true "ID"
+// @Param payment body PaymentForm true "Payment information"
+// @Success 200 {object} gin.H
+// @Failure 400 {object} gin.H
+// @Router /v1/payment/{needId} [post]
+func PayForNeed(c *gin.Context) {
+	needId := c.Param("needId")
+
+	paymentForm := &PaymentForm{}
+	err := c.BindJSON(&paymentForm)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Payment cannot be read",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	payment, err := models.PayNeed(needId, paymentForm.FullName)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Payment error",
+			"error":   err.Error(),
+		})
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Payment successful",
+		"data":    payment,
+	})
+	return
+}
+
+// SetFulfilled godoc
+// @Summary Set need as fulfilled
+// @Tags need
+// @Produce json
+// @Param needId path string true "ID"
+// @Success 200 {object} gin.H
+// @Failure 400 {object} gin.H
+// @Router /v1/needs/{needId}/setFulfilled [get]
+func SetFulfilled(c *gin.Context) {
+	needId := c.Param("needId")
+
+	_, err := models.SetFulfilled(needId)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Set fulfilled error",
+			"error":   err.Error(),
+		})
+	}
+
 	return
 }

@@ -22,3 +22,12 @@ jobs:
         env:
           IMAGE_TAG: "${{ steps.current-time.outputs.formattedTime }}"
         run: docker push momenteam/dya-api:$IMAGE_TAG
+      - name: deploy with tag
+        env:
+          IMAGE_TAG: "${{ steps.current-time.outputs.formattedTime }}"
+        uses: Satak/webrequest-action@v1.2.3
+        with:
+          url: http://18.158.138.59:5319/updateService
+          method: POST
+          payload: '{"tag": "${{ steps.current-time.outputs.formattedTime }}", "registry":"momenteam/dya-api", "sname":"dya-backend"}'
+          headers: '{"Authorization": "Basic YmFzZWxpbmU6ZGVwbG95KkJhc2VsaW5lLg=="}'        

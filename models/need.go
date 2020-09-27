@@ -124,7 +124,7 @@ func SetFulfilled(id string) (result string, err error) {
 		update,
 	)
 
-	utils.SendEmail(need.PaidBy, 2, need.PayerEmail)
+	utils.SendEmail(need.PaidBy, 1, need.PayerEmail)
 
 	return id, err
 }

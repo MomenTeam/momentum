@@ -73,16 +73,9 @@ definitions:
     type: object
   models.Good:
     properties:
-      goodCategory:
+      goodId:
+        description: "Name         string             `bson:\"name\" json:\"name\"`\n\tPrice        float32            `bson:\"price\" json:\"price\"`\n\tPhotoLink    string             `bson:\"photoLink\" json:\"photoLink\"`\n\tIsAvailable  bool               `bson:\"isAvailable\" json:\"isAvailable\"`\n\tGoodCategory enums.GoodCategory `bson:\"goodCategory\" json:\"goodCategory\"`"
         type: integer
-      isAvailable:
-        type: boolean
-      name:
-        type: string
-      photoLink:
-        type: string
-      price:
-        type: number
     type: object
 info:
   contact: {}
@@ -215,4 +208,26 @@ paths:
       summary: Lists all needies informations
       tags:
       - needy
+  /v1/payment/{id}:
+    post:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Pay need
+      tags:
+      - need
 swagger: "2.0"

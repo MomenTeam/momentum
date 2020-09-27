@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/google/uuid"
 	"github.com/momenteam/momentum/database"
+	"go.mongodb.org/mongo-driver/bson"
 	"time"
 )
 
@@ -26,7 +27,7 @@ type Need struct {
 func CreateNeed(need Need) (result Need, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			err = errors.New("needy create error")
+			err = errors.New("need create error")
 		}
 	}()
 
@@ -37,3 +38,21 @@ func CreateNeed(need Need) (result Need, err error) {
 	return need, err
 }
 
+func PayNeed(id string, fulfilledBy string) (result string, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("need create error")
+		}
+	}()
+
+	filter := bson.M{"_id": bson.M{"$eq": id}}
+	update := bson.M{"$set": bson.M{"isFulfilled": true, "fulfilledAt": time.Now(), "fulfilledBy": fulfilledBy}}
+
+	_, err = database.NeedCollection.UpdateOne(
+		context.Background(),
+		filter,
+		update,
+	)
+
+	return id, err
+}

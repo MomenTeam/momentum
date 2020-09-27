@@ -221,6 +221,40 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/v1/payment/{id}": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "need"
+                ],
+                "summary": "Pay need",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -336,20 +370,9 @@ var doc = `{
         "models.Good": {
             "type": "object",
             "properties": {
-                "goodCategory": {
+                "goodId": {
+                    "description": "Name         string             ` + "`" + `bson:\"name\" json:\"name\"` + "`" + `\n\tPrice        float32            ` + "`" + `bson:\"price\" json:\"price\"` + "`" + `\n\tPhotoLink    string             ` + "`" + `bson:\"photoLink\" json:\"photoLink\"` + "`" + `\n\tIsAvailable  bool               ` + "`" + `bson:\"isAvailable\" json:\"isAvailable\"` + "`" + `\n\tGoodCategory enums.GoodCategory ` + "`" + `bson:\"goodCategory\" json:\"goodCategory\"` + "`" + `",
                     "type": "integer"
-                },
-                "isAvailable": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "photoLink": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "number"
                 }
             }
         }

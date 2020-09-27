@@ -27,6 +27,11 @@ func Routes(router *gin.Engine) {
 		needies.POST("/:id/addNeed", controllers.AddNeed)
 	}
 
+	payment := router.Group("/v1/payment")
+	{
+		payment.POST("/:needId", controllers.PayForNeed)
+	}
+
 	mailTemplates := router.Group("/v1/mailTemplates")
 	{
 		mailTemplates.POST("/", controllers.CreateMailTemplate)

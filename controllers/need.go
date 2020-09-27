@@ -1,8 +1,6 @@
 package controllers
 
-import (
-	"github.com/momenteam/momentum/models"
-)
+import "github.com/momenteam/momentum/models"
 
 type NeedForm struct {
 	Name        string         `bson:"name" json:"name"`
@@ -15,11 +13,12 @@ type LineItemForm struct {
 	Description string      `bson:"description" json:"description"`
 	Amount      int         `bson:"amount" json:"amount"`
 	Good        models.Good `bson:"good" json:"good"`
+	//GoodIds     []int  `bson:"goodIds" json:"goodIds"`
 }
 
 type PaymentForm struct {
-	CreditCardNumber string
-	Cvv string
-	ExpireDate string
-
+	CreditCardNumber string `json:"creditCardNumer"`
+	Cvv string `json:"cvv"`
+	ExpireDate string `json:"expireDate"`
+	FullName string `json:"fullName"`
 }

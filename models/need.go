@@ -93,7 +93,9 @@ func GetAllNeeds() (result []Need, err error) {
 		if err = cursor.Decode(&need); err != nil {
 			log.Fatal(err)
 		}
-		needs = append(needs, need)
+		if need.Status == enums.NeedPaid || need.Status == enums.NeedFulfilled {
+			needs = append(needs, need)
+		}
 	}
 
 	return needs, err

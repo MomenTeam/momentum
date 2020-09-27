@@ -120,6 +120,40 @@ var doc = `{
                 }
             }
         },
+        "/v1/needies/getNeedyDetail/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "needy"
+                ],
+                "summary": "Get needy detail",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/needies/informations": {
             "get": {
                 "produces": [
@@ -156,6 +190,13 @@ var doc = `{
                 "summary": "Add need to needy",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Need information",
                         "name": "needy",
                         "in": "body",
@@ -163,13 +204,6 @@ var doc = `{
                         "schema": {
                             "$ref": "#/definitions/controllers.NeedForm"
                         }
-                    },
-                    {
-                        "type": "string",
-                        "description": "ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
                     }
                 ],
                 "responses": {

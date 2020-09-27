@@ -110,6 +110,26 @@ func GetAllNeediesInformations(c *gin.Context) {
 	return
 }
 
+// GetNeedyDetail godoc
+// @Summary Get needy detail
+// @Tags needy
+// @Produce json
+// @Param id path string true "ID"
+// @Success 200 {object} gin.H
+// @Failure 400 {object} gin.H
+// @Router /v1/needies/getNeedyDetail/{id} [get]
+func GetNeedyDetail(c *gin.Context) {
+	needyId := c.Param("id")
+	needyDetail, _ := models.GetNeedyDetail(needyId)
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Get needy detail",
+		"data":    needyDetail,
+	})
+	return
+}
+
 // AddNeed godoc
 // @Summary Add need to needy
 // @Tags needy

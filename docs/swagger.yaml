@@ -152,12 +152,34 @@ paths:
   /v1/needies/{id}/addNeed:
     post:
       parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
       - description: Need information
         in: body
         name: needy
         required: true
         schema:
           $ref: '#/definitions/controllers.NeedForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Add need to needy
+      tags:
+      - needy
+  /v1/needies/getNeedyDetail/{id}:
+    get:
+      parameters:
       - description: ID
         in: path
         name: id
@@ -174,7 +196,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Add need to needy
+      summary: Get needy detail
       tags:
       - needy
   /v1/needies/informations:

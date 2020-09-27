@@ -21,7 +21,7 @@ type Needy struct {
 	Priority        int                       `bson:"priority" json:"priority"`
 	Address         Address                   `bson:"address" json:"address"`
 	NeedyCategories []enums.NeedyCategoryType `bson:"needyCategories" json:"needyCategories"`
-	Needs           []string                  `bson:"category" json:"category"`
+	Needs           []string                  `bson:"needs" json:"needs"`
 	CreatedBy       string                    `bson:"createdBy" json:"createdBy"`
 	CreatedAt       time.Time                 `bson:"createdAt" json:"createdAt"`
 }
@@ -31,6 +31,20 @@ type NeedyInformation struct {
 	Address    string                    `json:"address"`
 	Categories []enums.NeedyCategoryType `json:"needyCategories"`
 	Summary    string                    `json:"summary"`
+}
+
+type NeedyDetail struct {
+	ID              string                    `json:"id"`
+	FirstName       string                    `json:"firstName"`
+	LastName        string                    `json:"lastName"`
+	PhoneNumber     string                    `json:"phoneNumber"`
+	Summary         string                    `json:"summary"`
+	Priority        int                       `json:"priority"`
+	Address         Address                   `json:"address"`
+	NeedyCategories []enums.NeedyCategoryType `json:"needyCategories"`
+	Needs           []Need                    `json:"needs"`
+	CreatedBy       string                    `json:"createdBy"`
+	CreatedAt       time.Time                 `json:"createdAt"`
 }
 
 func CreateNeedy(needy Needy) (result Needy, err error) {
@@ -132,6 +146,39 @@ func GetNeedy(id string) (Needy, error) {
 	err := database.NeediesCollection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&needy)
 
 	return needy, err
+}
+
+func GetNeedyDetail(id string) (NeedyDetail, error) {
+	needy := Needy{}
+	err := database.NeediesCollection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&needy)
+
+	needFilter := bson.M{"_id": bson.M{"$in": needy.Needs}}
+
+	var needs []Need
+	cursor, err := database.NeedCollection.Find(context.Background(), needFilter)
+	for cursor.Next(context.Background()) {
+		var need Need
+		if err = cursor.Decode(&need); err != nil {
+			log.Fatal(err)
+		}
+		needs = append(needs, need)
+	}
+
+	needyDetail := NeedyDetail{
+		ID:              needy.ID,
+		FirstName:       needy.FirstName,
+		LastName:        needy.LastName,
+		PhoneNumber:     needy.PhoneNumber,
+		Summary:         needy.Summary,
+		Priority:        needy.Priority,
+		Address:         needy.Address,
+		NeedyCategories: needy.NeedyCategories,
+		Needs:           needs,
+		CreatedBy:       needy.CreatedBy,
+		CreatedAt:       needy.CreatedAt,
+	}
+
+	return needyDetail, err
 }
 
 func DeleteNeedy(id string, cancelledBy string) error {

@@ -23,6 +23,7 @@ func Routes(router *gin.Engine) {
 		needies.POST("/", controllers.CreateNeedy)
 		needies.GET("/", controllers.GetAllNeedies)
 		needies.GET("/informations", controllers.GetAllNeediesInformations)
+		needies.GET("/getNeedyDetail/:id", controllers.GetNeedyDetail)
 		needies.POST("/:id/addNeed", controllers.AddNeed)
 	}
 

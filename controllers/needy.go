@@ -176,7 +176,6 @@ func AddNeed(c *gin.Context) {
 		Description: needForm.Description,
 		LineItems:   lineItems,
 		Priority:    needForm.Priority,
-		IsCancelled: false,
 		CreatedAt: time.Now(),
 	}
 

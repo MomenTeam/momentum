@@ -27,6 +27,7 @@ type Needy struct {
 }
 
 type NeedyInformation struct {
+	ID         string                    `json:"id"`
 	FullName   string                    `json:"fullName"`
 	Address    string                    `json:"address"`
 	Categories []enums.NeedyCategoryType `json:"needyCategories"`
@@ -111,6 +112,7 @@ func GetAllNeediesInformations() ([]NeedyInformation, error) {
 			log.Fatal(err)
 		}
 		needyInformation := NeedyInformation{
+			ID: needy.ID,
 			FullName:   fmt.Sprintf("%s %s", mask(needy.FirstName), mask(needy.LastName)),
 			Address:    fmt.Sprintf("%s, %s", needy.Address.District, needy.Address.City),
 			Summary:    needy.Summary,

@@ -222,6 +222,31 @@ var doc = `{
                 }
             }
         },
+        "/v1/needs": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "need"
+                ],
+                "summary": "Lists all needs",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/payment/{id}": {
             "post": {
                 "produces": [

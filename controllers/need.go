@@ -1,6 +1,10 @@
 package controllers
 
-import "github.com/momenteam/momentum/models"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/momenteam/momentum/models"
+	"net/http"
+)
 
 type NeedForm struct {
 	Name        string         `bson:"name" json:"name"`
@@ -21,4 +25,23 @@ type PaymentForm struct {
 	Cvv string `json:"cvv"`
 	ExpireDate string `json:"expireDate"`
 	FullName string `json:"fullName"`
+}
+
+// GetAllNeeds godoc
+// @Summary Lists all needs
+// @Tags need
+// @Produce  json
+// @Success 200 {object} gin.H
+// @Failure 400 {object} gin.H
+// @Router /v1/needs [get]
+func GetAllNeeds(c *gin.Context) {
+	needs, _ := models.GetAllNeeds()
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"count":   len(needs),
+		"message": "All needs listed",
+		"data":    needs,
+	})
+	return
 }

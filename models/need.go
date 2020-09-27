@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/momenteam/momentum/database"
 	"go.mongodb.org/mongo-driver/bson"
+	"log"
 	"time"
 )
 
@@ -55,4 +56,22 @@ func PayNeed(id string, fulfilledBy string) (result string, err error) {
 	)
 
 	return id, err
+}
+
+func GetAllNeeds() (result []Need, err error) {
+	needs := []Need{}
+
+	cursor, err := database.NeedCollection.Find(context.TODO(), bson.D{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	for cursor.Next(context.Background()) {
+		var need Need
+		if err = cursor.Decode(&need); err != nil {
+			log.Fatal(err)
+		}
+		needs = append(needs, need)
+	}
+
+	return needs, err
 }

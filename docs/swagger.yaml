@@ -208,6 +208,22 @@ paths:
       summary: Lists all needies informations
       tags:
       - needy
+  /v1/needs:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Lists all needs
+      tags:
+      - need
   /v1/payment/{id}:
     post:
       parameters:

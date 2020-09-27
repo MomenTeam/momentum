@@ -15,6 +15,7 @@ var Context context.Context
 var CancelFunc context.CancelFunc
 var NeediesCollection *mongo.Collection
 var MailTemplateCollection *mongo.Collection
+var NeedCollection *mongo.Collection
 
 func Setup() {
 	Client, Context, CancelFunc = getConnection(configs.GlobalConfig.Database.ConnectionString)
@@ -44,4 +45,5 @@ func getCollections() {
 
 	NeediesCollection = database.Collection("Needies")
 	MailTemplateCollection = database.Collection("MailTemplates")
+	NeedCollection = database.Collection("Needs")
 }

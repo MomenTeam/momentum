@@ -8,7 +8,6 @@ import (
 	"github.com/momenteam/momentum/database"
 	"github.com/momenteam/momentum/models/enums"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"time"
 )
@@ -22,7 +21,7 @@ type Needy struct {
 	Priority        int                       `bson:"priority" json:"priority"`
 	Address         Address                   `bson:"address" json:"address"`
 	NeedyCategories []enums.NeedyCategoryType `bson:"needyCategories" json:"needyCategories"`
-	Needs           []primitive.ObjectID      `bson:"category" json:"category"`
+	Needs           []string                  `bson:"category" json:"category"`
 	CreatedBy       string                    `bson:"createdBy" json:"createdBy"`
 	CreatedAt       time.Time                 `bson:"createdAt" json:"createdAt"`
 }
@@ -44,6 +43,43 @@ func CreateNeedy(needy Needy) (result Needy, err error) {
 	needy.ID = uuid.New().String()
 
 	_, err = database.NeediesCollection.InsertOne(context.Background(), needy)
+
+	return needy, err
+}
+
+func AddNeed(need Need, needyId string) (result Needy, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("needy create error")
+		}
+	}()
+
+	needy, err := GetNeedy(needyId)
+
+	if err != nil {
+		return result, err
+	}
+
+	needResult, err := CreateNeed(need)
+
+	if err != nil {
+		return result, err
+	}
+
+	needy.Needs = appendIfMissing(needy.Needs, needResult.ID)
+
+	filter := bson.M{"_id": bson.M{"$eq": needyId}}
+	update := bson.M{"$set": bson.M{"needs": needy.Needs}}
+
+	_, err = database.NeediesCollection.UpdateOne(
+		context.Background(),
+		filter,
+		update,
+	)
+
+	if err != nil {
+		return result, err
+	}
 
 	return needy, err
 }
@@ -114,6 +150,15 @@ func DeleteNeedy(id string, cancelledBy string) error {
 
 func mask(s string) string {
 	runes := []rune(s)
-	result := string(runes[0:2])
-	return result + "****"
+	result := string(runes[0:1])
+	return result + "***"
+}
+
+func appendIfMissing(slice []string, i string) []string {
+	for _, ele := range slice {
+		if ele == i {
+			return slice
+		}
+	}
+	return append(slice, i)
 }

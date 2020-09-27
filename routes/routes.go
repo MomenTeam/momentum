@@ -14,13 +14,16 @@ func Routes(router *gin.Engine) {
 	router.GET("/", welcome)
 	router.NoRoute(notFound)
 
-	router.Use(cors.Default()) //Allows all origins
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	router.Use(cors.New(config))
 
 	needies := router.Group("/v1/needies")
 	{
 		needies.POST("/", controllers.CreateNeedy)
 		needies.GET("/", controllers.GetAllNeedies)
 		needies.GET("/informations", controllers.GetAllNeediesInformations)
+		needies.POST("/:id/addNeed", controllers.AddNeed)
 	}
 
 	mailTemplates := router.Group("/v1/mailTemplates")

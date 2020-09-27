@@ -144,9 +144,67 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/v1/needies/{id}/addNeed": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "needy"
+                ],
+                "summary": "Add need to needy",
+                "parameters": [
+                    {
+                        "description": "Need information",
+                        "name": "needy",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.NeedForm"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "controllers.LineItemForm": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "good": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Good"
+                }
+            }
+        },
         "controllers.MailTemplateForm": {
             "type": "object",
             "properties": {
@@ -155,6 +213,26 @@ var doc = `{
                 },
                 "template": {
                     "type": "string"
+                }
+            }
+        },
+        "controllers.NeedForm": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "lineItems": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.LineItemForm"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "priority": {
+                    "type": "integer"
                 }
             }
         },
@@ -218,6 +296,26 @@ var doc = `{
                 },
                 "secondLine": {
                     "type": "string"
+                }
+            }
+        },
+        "models.Good": {
+            "type": "object",
+            "properties": {
+                "goodCategory": {
+                    "type": "integer"
+                },
+                "isAvailable": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "photoLink": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
                 }
             }
         }

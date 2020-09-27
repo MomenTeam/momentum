@@ -109,3 +109,69 @@ func GetAllNeediesInformations(c *gin.Context) {
 	})
 	return
 }
+
+// AddNeed godoc
+// @Summary Add need to needy
+// @Tags needy
+// @Produce json
+// @Param id path string true "ID"
+// @Param needy body NeedForm true "Need information"
+// @Success 200 {object} gin.H
+// @Failure 400 {object} gin.H
+// @Router /v1/needies/{id}/addNeed [post]
+func AddNeed(c *gin.Context) {
+	needId := c.Param("id")
+	needForm := &NeedForm{}
+	err := c.BindJSON(&needForm)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Needy cannot be created",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	var lineItems []models.LineItem
+	for _, lineItem := range needForm.LineItems {
+		lineItems = append(lineItems, models.LineItem{
+			Description: lineItem.Description,
+			Amount:      lineItem.Amount,
+			Good:        models.Good{
+				Name:         lineItem.Good.Name,
+				Price:        lineItem.Good.Price,
+				PhotoLink:    lineItem.Good.PhotoLink,
+				IsAvailable:  lineItem.Good.IsAvailable,
+				GoodCategory: lineItem.Good.GoodCategory,
+			},
+		})
+	}
+
+	need := &models.Need{
+		Name:        needForm.Name,
+		Description: needForm.Description,
+		LineItems:   lineItems,
+		IsFulfilled: false,
+		Priority:    needForm.Priority,
+		IsCancelled: false,
+		CreatedAt: time.Now(),
+	}
+
+	result, err := models.AddNeed(*need, needId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Needy cannot be created",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Needy successfully created",
+		"data":    result,
+	})
+	return
+}

@@ -1,10 +1,33 @@
 definitions:
+  controllers.LineItemForm:
+    properties:
+      amount:
+        type: integer
+      description:
+        type: string
+      good:
+        $ref: '#/definitions/models.Good'
+        type: object
+    type: object
   controllers.MailTemplateForm:
     properties:
       mailTemplateType:
         type: integer
       template:
         type: string
+    type: object
+  controllers.NeedForm:
+    properties:
+      description:
+        type: string
+      lineItems:
+        items:
+          $ref: '#/definitions/controllers.LineItemForm'
+        type: array
+      name:
+        type: string
+      priority:
+        type: integer
     type: object
   controllers.NeedyForm:
     properties:
@@ -47,6 +70,19 @@ definitions:
         type: string
       secondLine:
         type: string
+    type: object
+  models.Good:
+    properties:
+      goodCategory:
+        type: integer
+      isAvailable:
+        type: boolean
+      name:
+        type: string
+      photoLink:
+        type: string
+      price:
+        type: number
     type: object
 info:
   contact: {}
@@ -111,6 +147,34 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Creates needy
+      tags:
+      - needy
+  /v1/needies/{id}/addNeed:
+    post:
+      parameters:
+      - description: Need information
+        in: body
+        name: needy
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.NeedForm'
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Add need to needy
       tags:
       - needy
   /v1/needies/informations:

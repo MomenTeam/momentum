@@ -2,10 +2,11 @@ package database
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"time"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/momenteam/momentum/configs"
 )
@@ -13,7 +14,7 @@ import (
 var Client *mongo.Client
 var Context context.Context
 var CancelFunc context.CancelFunc
-var NeediesCollection *mongo.Collection
+var NeederCollection *mongo.Collection
 var MailTemplateCollection *mongo.Collection
 var NeedCollection *mongo.Collection
 
@@ -43,7 +44,7 @@ func getCollections() {
 	databaseName := configs.GlobalConfig.Database.DatabaseName
 	database := Client.Database(databaseName)
 
-	NeediesCollection = database.Collection("Needies")
+	NeederCollection = database.Collection("Needer")
 	MailTemplateCollection = database.Collection("MailTemplates")
 	NeedCollection = database.Collection("Needs")
 }

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/devfeel/mapper"
 	"github.com/gin-gonic/gin"
 	"github.com/momenteam/momentum/configs"
@@ -9,16 +11,13 @@ import (
 	"github.com/momenteam/momentum/docs"
 	"github.com/momenteam/momentum/models"
 	"github.com/momenteam/momentum/routes"
-	"log"
 )
 
 func init() {
 	configs.Setup()
 	database.Setup()
 	mapper.Register(&models.MailTemplate{})
-	mapper.Register(&controllers.MailTemplateForm{})
-	mapper.Register(&models.Needy{})
-	mapper.Register(&controllers.NeedyForm{})
+	mapper.Register(&controllers.NeederForm{})
 }
 
 func main() {

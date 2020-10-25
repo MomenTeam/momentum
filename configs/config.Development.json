@@ -1,6 +1,6 @@
 {
     "database": {
-        "connectionString": "mongodb+srv://momentum:Mmq8vQ2hD2gT2uU@hackathon.qw6qb.mongodb.net/hackathon?retryWrites=true&w=majority",
+        "connectionString": "mongodb+srv://momentum:Mmq8vQ2hD2gT2uU@hackathon.qw6qb.mongodb.net/hackathon-dev?retryWrites=true&w=majority",
         "databaseName": "hackathon"
     },
     "server": {

@@ -28,6 +28,12 @@ type NeederForm struct {
 	Summary     string `json:"summary"`
 }
 
+// PackageForm type
+type PackageForm struct {
+	NeederID string `json:"neederId"`
+	Name     string `json:"name"`
+}
+
 // // GetAllNeeders godoc
 // // @Summary Lists all needies informations
 // // @Tags needer
@@ -67,6 +73,7 @@ func CreateNeeder(c *gin.Context) {
 		Summary:     neederForm.Summary,
 		Address:     neederForm.Address,
 		Category:    neederForm.Category,
+		Packages:    []models.Package{},
 		CreatedBy:   "admin", //TODO: edit this
 		CreatedAt:   time.Now(),
 	}
@@ -106,6 +113,42 @@ func NeederDetail(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
 		"message": "Needer detail.",
+		"data":    result,
+	})
+	return
+}
+
+func CreatePackage(c *gin.Context) {
+	packageForm := &PackageForm{}
+
+	err := c.BindJSON(&packageForm)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Needer cannot be created",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	packageModel := &models.Package{
+		Name:       packageForm.Name,
+		TotalPrice: 0,
+	}
+
+	result, err := models.CreatePackage(packageForm.NeederID, *packageModel)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Package cannot be created",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Package successfully created",
 		"data":    result,
 	})
 	return

@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/momenteam/momentum/database"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -26,8 +27,9 @@ type Needer struct {
 
 // Package type
 type Package struct {
+	ID         string     `bson:"_id" json:"id"`
 	Name       string     `bson:"name" json:"name"`
-	TotalPrice string     `bson:"totalPrice" json:"totalPrice"`
+	TotalPrice int        `bson:"totalPrice" json:"totalPrice"`
 	LineItems  []LineItem `bson:"lineItems" json:"lineItems"`
 }
 
@@ -58,4 +60,32 @@ func GetNeederDetail(id string) (Needer, error) {
 	err := database.NeederCollection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&needer)
 
 	return needer, err
+}
+
+func CreatePackage(id string, packageModel Package) (packages Package, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("Needer create error")
+		}
+	}()
+	// needer := Needer{}
+	packageModel.ID = uuid.New().String()
+	packagesArray := []Package{}
+	packagesArray = append(packagesArray, packageModel)
+
+	after := options.After
+	opt := options.FindOneAndUpdateOptions{
+		ReturnDocument: &after,
+	}
+	filter := bson.M{"_id": id}
+	update := bson.M{"$push": bson.M{"packages": packages}}
+
+	err = database.NeederCollection.FindOneAndUpdate(
+		context.Background(),
+		filter,
+		update,
+		&opt,
+	).Decode(&packageModel)
+
+	return packageModel, err
 }

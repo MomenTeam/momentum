@@ -1,12 +1,13 @@
 package routes
 
 import (
+	"net/http"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/momenteam/momentum/controllers"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
-	"net/http"
 )
 
 func Routes(router *gin.Engine) {
@@ -18,32 +19,28 @@ func Routes(router *gin.Engine) {
 	config.AllowAllOrigins = true
 	router.Use(cors.New(config))
 
-	needies := router.Group("/v1/needies")
+	needies := router.Group("/v1/needer")
 	{
-		needies.POST("/", controllers.CreateNeedy)
-		needies.GET("/getAll", controllers.GetAllNeedies)
-		needies.GET("/informations", controllers.GetAllNeediesInformations)
-		needies.GET("/getNeedyDetail/:id", controllers.GetNeedyDetail)
-		needies.POST("/:id/addNeed", controllers.AddNeed)
+		needies.GET("/", controllers.GetAllNeeders)
 	}
 
-	needs := router.Group("/v1/needs")
-	{
-		needs.GET("/", controllers.GetAllNeeds)
-		needs.GET("/getAllDetails", controllers.GetAllNeedDetails)
-		needs.GET("/setFulfilled/:needId", controllers.SetFulfilled)
-		needs.DELETE("/:needId/cancel", controllers.CancelNeed)
-	}
+	// needs := router.Group("/v1/needs")
+	// {
+	// 	needs.GET("/", controllers.GetAllNeeds)
+	// 	needs.GET("/getAllDetails", controllers.GetAllNeedDetails)
+	// 	needs.GET("/setFulfilled/:needId", controllers.SetFulfilled)
+	// 	needs.DELETE("/:needId/cancel", controllers.CancelNeed)
+	// }
 
-	payment := router.Group("/v1/payment")
-	{
-		payment.POST("/:needId", controllers.PayForNeed)
-	}
+	// payment := router.Group("/v1/payment")
+	// {
+	// 	payment.POST("/:needId", controllers.PayForNeed)
+	// }
 
-	mailTemplates := router.Group("/v1/mailTemplates")
-	{
-		mailTemplates.POST("/", controllers.CreateMailTemplate)
-	}
+	// mailTemplates := router.Group("/v1/mailTemplates")
+	// {
+	// 	mailTemplates.POST("/", controllers.CreateMailTemplate)
+	// }
 
 	/*
 		assignees := router.Group("/assignees")

@@ -4,13 +4,16 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+// Validator variable
 var Validator *validator.Validate
 
-func init() {
+// Setup validator
+func Setup() {
 	Validator = validator.New()
-	Validator.RegisterValidation("department", ValidateDepartment)
+	Validator.RegisterValidation("status", ValidateStatus)
 }
 
-func ValidateDepartment(fl validator.FieldLevel) bool {
-	return fl.Field().String() == "Design" || fl.Field().String() == "Marketing" || fl.Field().String() == "Development"
+// ValidateStatus function
+func ValidateStatus(fl validator.FieldLevel) bool {
+	return fl.Field().String() == "PENDING" || fl.Field().String() == "PROCESSING" || fl.Field().String() == "DELIVERED"
 }

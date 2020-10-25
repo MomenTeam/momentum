@@ -68,7 +68,7 @@ func CreatePackage(id string, packageModel Package) (packages Package, err error
 			err = errors.New("Needer create error")
 		}
 	}()
-	// needer := Needer{}
+
 	packageModel.ID = uuid.New().String()
 	packagesArray := []Package{}
 	packagesArray = append(packagesArray, packageModel)
@@ -78,14 +78,13 @@ func CreatePackage(id string, packageModel Package) (packages Package, err error
 		ReturnDocument: &after,
 	}
 	filter := bson.M{"_id": id}
-	update := bson.M{"$push": bson.M{"packages": packages}}
+	update := bson.M{"$push": bson.M{"packages": packagesArray}}
 
-	err = database.NeederCollection.FindOneAndUpdate(
+	_ = database.NeederCollection.FindOneAndUpdate(
 		context.Background(),
 		filter,
 		update,
 		&opt,
-	).Decode(&packageModel)
-
+	)
 	return packageModel, err
 }

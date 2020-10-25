@@ -88,3 +88,25 @@ func CreateNeeder(c *gin.Context) {
 	})
 	return
 }
+
+func NeederDetail(c *gin.Context) {
+	neederID := c.Param("id")
+
+	result, err := models.GetNeederDetail(neederID)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Needer detail error",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Needer detail.",
+		"data":    result,
+	})
+	return
+}

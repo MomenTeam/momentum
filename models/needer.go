@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/momenteam/momentum/database"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // Needer type
@@ -47,6 +48,14 @@ func CreateNeeder(needer Needer) (result Needer, err error) {
 
 	needer.ID = uuid.New().String()
 	_, err = database.NeederCollection.InsertOne(context.Background(), needer)
+
+	return needer, err
+}
+
+// GetNeederDetail func
+func GetNeederDetail(id string) (Needer, error) {
+	needer := Needer{}
+	err := database.NeederCollection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&needer)
 
 	return needer, err
 }

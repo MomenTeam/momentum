@@ -21,7 +21,7 @@ func Routes(router *gin.Engine) {
 
 	needies := router.Group("/v1/needer")
 	{
-		needies.GET("/", controllers.GetAllNeeders)
+		needies.GET("/all", controllers.GetAllNeeders)
 	}
 
 	// needs := router.Group("/v1/needs")

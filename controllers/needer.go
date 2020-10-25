@@ -66,6 +66,7 @@ func CreateNeeder(c *gin.Context) {
 		PhoneNumber: neederForm.PhoneNumber,
 		Summary:     neederForm.Summary,
 		Address:     neederForm.Address,
+		Category:    neederForm.Category,
 		CreatedBy:   "admin", //TODO: edit this
 		CreatedAt:   time.Now(),
 	}

@@ -26,6 +26,7 @@ func Routes(router *gin.Engine) {
 		needies.GET("/detail/:id", controllers.NeederDetail)
 		needies.POST("/createPackage", controllers.CreatePackage)
 		needies.POST("/createLineItem", controllers.CreateLineItem)
+		needies.PUT("/updatePublishStatusOfPackage", controllers.UpdatePublishStatusOfPackage)
 	}
 
 	// needs := router.Group("/v1/needs")

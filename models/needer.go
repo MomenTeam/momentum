@@ -24,14 +24,16 @@ type Needer struct {
 	Packages    []Package `bson:"packages" json:"packages"`
 	CreatedBy   string    `bson:"createdBy" json:"createdBy"`
 	CreatedAt   time.Time `bson:"createdAt" json:"createdAt"`
+	IsPublished bool      `bson:"isPublished" json:"isPublished"`
 }
 
 // Package type
 type Package struct {
-	ID         string     `bson:"_id" json:"id"`
-	Name       string     `bson:"name" json:"name"`
-	TotalPrice int        `bson:"totalPrice" json:"totalPrice"`
-	LineItems  []LineItem `bson:"lineItems" json:"lineItems"`
+	ID          string     `bson:"_id" json:"id"`
+	Name        string     `bson:"name" json:"name"`
+	TotalPrice  int        `bson:"totalPrice" json:"totalPrice"`
+	IsPublished bool       `bson:"isPublished" json:"isPublished"`
+	LineItems   []LineItem `bson:"lineItems" json:"lineItems"`
 }
 
 // LineItem type
@@ -158,6 +160,32 @@ func updateTotalPrice(id string, packageID string, price int) (isTrue bool, err 
 		update,
 		&opt,
 	)
+
+	return true, err
+}
+
+// UpdatePackageIsPublished func
+func UpdatePackageIsPublished(id string, packageID string, isPublished bool) (boolean bool, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("UpdatePackageIsPublished error")
+		}
+	}()
+
+	upsert := true
+	after := options.After
+	opt := options.FindOneAndUpdateOptions{
+		ReturnDocument: &after,
+		Upsert:         &upsert,
+	}
+	filter := bson.M{"_id": id, "packages._id": packageID}
+	update := bson.M{"$set": bson.M{"packages.$.isPublished": isPublished}}
+	err = database.NeederCollection.FindOneAndUpdate(
+		context.Background(),
+		filter,
+		update,
+		&opt,
+	).Err()
 
 	return true, err
 }

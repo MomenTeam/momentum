@@ -18,7 +18,7 @@ import (
 // 	NeedyCategories []int          `bson:"needyCategories" json:"needyCategories"`
 // }
 
-// Needer type
+// NeederForm type
 type NeederForm struct {
 	FirstName   string `json:"firstName"`
 	LastName    string `json:"lastName"`
@@ -34,11 +34,18 @@ type PackageForm struct {
 	Name     string `json:"name"`
 }
 
-// PackageForm type
+// LineItemForm type
 type LineItemForm struct {
 	NeederID  string          `json:"neederId"`
 	PackageID string          `json:"packageId"`
 	LineItem  models.LineItem `json:"lineItem"`
+}
+
+// IsPublished type
+type IsPublished struct {
+	NeederID    string `json:"neederId"`
+	PackageID   string `json:"packageId"`
+	IsPublished bool   `json:"isPublished"`
 }
 
 // GetAllNeeders func
@@ -190,6 +197,38 @@ func CreateLineItem(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
 		"message": "Line Item successfully created",
+		"data":    result,
+	})
+	return
+}
+
+// UpdatePublishStatusOfPackage func
+func UpdatePublishStatusOfPackage(c *gin.Context) {
+	isPublished := &IsPublished{}
+
+	err := c.BindJSON(&isPublished)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "isPublished fields not correct.",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	result, err := models.UpdatePackageIsPublished(isPublished.NeederID, isPublished.PackageID, isPublished.IsPublished)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "UpdatePublishStatusOfPackage error",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Package's isPublished toggled.",
 		"data":    result,
 	})
 	return

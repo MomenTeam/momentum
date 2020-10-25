@@ -1,7 +1,7 @@
 {
     "database": {
         "connectionString": "mongodb+srv://momentum:Mmq8vQ2hD2gT2uU@hackathon.qw6qb.mongodb.net/hackathon-dev?retryWrites=true&w=majority",
-        "databaseName": "hackathon"
+        "databaseName": "hackathon-dev"
     },
     "server": {
         "port": "8080"

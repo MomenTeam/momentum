@@ -34,6 +34,13 @@ type PackageForm struct {
 	Name     string `json:"name"`
 }
 
+// PackageForm type
+type LineItemForm struct {
+	NeederID  string          `json:"neederId"`
+	PackageID string          `json:"packageId"`
+	LineItem  models.LineItem `json:"lineItem"`
+}
+
 // // GetAllNeeders godoc
 // // @Summary Lists all needies informations
 // // @Tags needer
@@ -149,6 +156,37 @@ func CreatePackage(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
 		"message": "Package successfully created",
+		"data":    result,
+	})
+	return
+}
+
+func CreateLineItem(c *gin.Context) {
+	lineItemForm := &LineItemForm{}
+
+	err := c.BindJSON(&lineItemForm)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Needer cannot be created",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	result, err := models.CreateLineItem(lineItemForm.NeederID, lineItemForm.PackageID, lineItemForm.LineItem)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Line Item cannot be created",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Line Item successfully created",
 		"data":    result,
 	})
 	return

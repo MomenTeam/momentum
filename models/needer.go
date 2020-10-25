@@ -35,6 +35,7 @@ type Package struct {
 
 // LineItem type
 type LineItem struct {
+	ID     string `bson:"_id" json:"id"`
 	Name   string `bson:"name" json:"name"`
 	Price  int    `bson:"price" json:"price"`
 	Amount int    `bson:"amount" json:"amount"`
@@ -62,6 +63,7 @@ func GetNeederDetail(id string) (Needer, error) {
 	return needer, err
 }
 
+// CreatePackage func
 func CreatePackage(id string, packageModel Package) (packages Package, err error) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -70,8 +72,7 @@ func CreatePackage(id string, packageModel Package) (packages Package, err error
 	}()
 
 	packageModel.ID = uuid.New().String()
-	// packagesArray := []Package{}
-	// packagesArray = append(packagesArray, packageModel)
+	packageModel.LineItems = []LineItem{}
 
 	after := options.After
 	opt := options.FindOneAndUpdateOptions{
@@ -87,4 +88,29 @@ func CreatePackage(id string, packageModel Package) (packages Package, err error
 		&opt,
 	)
 	return packageModel, err
+}
+
+// CreateLineItem func
+func CreateLineItem(id string, packageID string, lineItem LineItem) (lineItems LineItem, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("Needer create error")
+		}
+	}()
+
+	lineItem.ID = uuid.New().String()
+	after := options.After
+	opt := options.FindOneAndUpdateOptions{
+		ReturnDocument: &after,
+	}
+	filter := bson.M{"_id": id, "packages._id": packageID}
+	update := bson.M{"$push": bson.M{"packages.$.lineItems": lineItem}}
+
+	_ = database.NeederCollection.FindOneAndUpdate(
+		context.Background(),
+		filter,
+		update,
+		&opt,
+	)
+	return lineItem, err
 }

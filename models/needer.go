@@ -94,7 +94,7 @@ func CreatePackage(id string, packageModel Package) (packages Package, err error
 func CreateLineItem(id string, packageID string, lineItem LineItem) (lineItems LineItem, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			err = errors.New("Needer create error")
+			err = errors.New("LineItem create error")
 		}
 	}()
 
@@ -103,6 +103,7 @@ func CreateLineItem(id string, packageID string, lineItem LineItem) (lineItems L
 	opt := options.FindOneAndUpdateOptions{
 		ReturnDocument: &after,
 	}
+
 	filter := bson.M{"_id": id, "packages._id": packageID}
 	update := bson.M{"$push": bson.M{"packages.$.lineItems": lineItem}}
 
@@ -112,5 +113,31 @@ func CreateLineItem(id string, packageID string, lineItem LineItem) (lineItems L
 		update,
 		&opt,
 	)
+	willAdd := lineItem.Price * lineItem.Amount
+	_, err = updateTotalPrice(id, packageID, willAdd)
 	return lineItem, err
+}
+
+func updateTotalPrice(id string, packageID string, price int) (isTrue bool, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("updateTotalPrice error")
+		}
+	}()
+	after := options.After
+	opt := options.FindOneAndUpdateOptions{
+		ReturnDocument: &after,
+	}
+
+	filter := bson.M{"_id": id, "packages._id": packageID}
+	update := bson.M{"$inc": bson.M{"packages.$.totalPrice": price}}
+
+	_ = database.NeederCollection.FindOneAndUpdate(
+		context.Background(),
+		filter,
+		update,
+		&opt,
+	)
+
+	return true, err
 }

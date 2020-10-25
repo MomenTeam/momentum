@@ -189,3 +189,29 @@ func UpdatePackageIsPublished(id string, packageID string, isPublished bool) (bo
 
 	return true, err
 }
+
+// UpdateNeederIsPublished func
+func UpdateNeederIsPublished(id string, isPublished bool) (boolean bool, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("UpdateNeederIsPublished error")
+		}
+	}()
+
+	upsert := true
+	after := options.After
+	opt := options.FindOneAndUpdateOptions{
+		ReturnDocument: &after,
+		Upsert:         &upsert,
+	}
+	filter := bson.M{"_id": id}
+	update := bson.M{"$set": bson.M{"isPublished": isPublished}}
+	err = database.NeederCollection.FindOneAndUpdate(
+		context.Background(),
+		filter,
+		update,
+		&opt,
+	).Err()
+
+	return true, err
+}

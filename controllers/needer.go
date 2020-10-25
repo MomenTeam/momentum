@@ -233,3 +233,35 @@ func UpdatePublishStatusOfPackage(c *gin.Context) {
 	})
 	return
 }
+
+// UpdatePublishStatusOfNeeder func
+func UpdatePublishStatusOfNeeder(c *gin.Context) {
+	isPublished := &IsPublished{}
+
+	err := c.BindJSON(&isPublished)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "isPublished fields not correct.",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	result, err := models.UpdateNeederIsPublished(isPublished.NeederID, isPublished.IsPublished)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "UpdatePublishStatusOfPackage error",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Needer's isPublished toggled.",
+		"data":    result,
+	})
+	return
+}

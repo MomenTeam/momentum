@@ -73,7 +73,7 @@ func CreateNeeder(c *gin.Context) {
 		Summary:     neederForm.Summary,
 		Address:     neederForm.Address,
 		Category:    neederForm.Category,
-		Packages:    [][]models.Package{},
+		Packages:    []models.Package{},
 		CreatedBy:   "admin", //TODO: edit this
 		CreatedAt:   time.Now(),
 	}

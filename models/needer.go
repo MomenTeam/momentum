@@ -13,16 +13,16 @@ import (
 
 // Needer type
 type Needer struct {
-	ID          string    `bson:"_id" json:"id"`
-	FirstName   string    `bson:"firstName" json:"firstName"`
-	LastName    string    `bson:"lastName" json:"lastName"`
-	Address     string    `bson:"address" json:"address"`
-	Category    string    `bson:"category" json:"category"`
-	PhoneNumber string    `bson:"phoneNumber" json:"phoneNumber"`
-	Summary     string    `bson:"summary" json:"summary"`
-	Packages    []Package `bson:"packages" json:"packages"`
-	CreatedBy   string    `bson:"createdBy" json:"createdBy"`
-	CreatedAt   time.Time `bson:"createdAt" json:"createdAt"`
+	ID          string      `bson:"_id" json:"id"`
+	FirstName   string      `bson:"firstName" json:"firstName"`
+	LastName    string      `bson:"lastName" json:"lastName"`
+	Address     string      `bson:"address" json:"address"`
+	Category    string      `bson:"category" json:"category"`
+	PhoneNumber string      `bson:"phoneNumber" json:"phoneNumber"`
+	Summary     string      `bson:"summary" json:"summary"`
+	Packages    [][]Package `bson:"packages" json:"packages"`
+	CreatedBy   string      `bson:"createdBy" json:"createdBy"`
+	CreatedAt   time.Time   `bson:"createdAt" json:"createdAt"`
 }
 
 // Package type

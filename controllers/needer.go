@@ -41,25 +41,28 @@ type LineItemForm struct {
 	LineItem  models.LineItem `json:"lineItem"`
 }
 
-// // GetAllNeeders godoc
-// // @Summary Lists all needies informations
-// // @Tags needer
-// // @Produce  json
-// // @Success 200 {object} gin.H
-// // @Failure 400 {object} gin.H
-// // @Router /v1/needer [get]
-// func GetAllNeeders(c *gin.Context) {
-// 	needies, _ := models.GetAllNeedies()
+// GetAllNeeders func
+func GetAllNeeders(c *gin.Context) {
+	needer, err := models.GetAllNeeders()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Needers couldn't fetch",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	c.JSON(http.StatusOK, gin.H{
-// 		"status":  http.StatusOK,
-// 		"count":   len(needies),
-// 		"message": "All needies informations listed",
-// 		"data":    needies,
-// 	})
-// 	return
-// }
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"count":   len(needer),
+		"message": "All needers fetched.",
+		"data":    needer,
+	})
+	return
+}
 
+// CreateNeeder func
 func CreateNeeder(c *gin.Context) {
 	neederForm := &NeederForm{}
 	err := c.BindJSON(&neederForm)

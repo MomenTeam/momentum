@@ -3,12 +3,13 @@ package models
 import (
 	"context"
 	"errors"
+	"log"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/momenteam/momentum/database"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"gopkg.in/mgo.v2/bson"
 )
 
 // Needer type
@@ -39,6 +40,25 @@ type LineItem struct {
 	Name   string `bson:"name" json:"name"`
 	Price  int    `bson:"price" json:"price"`
 	Amount int    `bson:"amount" json:"amount"`
+}
+
+// GetAllNeeders func
+func GetAllNeeders() ([]Needer, error) {
+	needers := []Needer{}
+
+	cursor, err := database.NeederCollection.Find(context.TODO(), bson.D{})
+	if err != nil {
+		log.Println(err)
+	}
+	for cursor.Next(context.Background()) {
+		var needer Needer
+		if err = cursor.Decode(&needer); err != nil {
+			log.Fatal(err)
+		}
+		needers = append(needers, needer)
+	}
+
+	return needers, err
 }
 
 // CreateNeeder func

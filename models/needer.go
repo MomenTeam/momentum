@@ -71,6 +71,7 @@ type Contact struct {
 	PhoneNumber string `bson:"phoneNumber" json:"phoneNumber"`
 	Email       string `bson:"email" json:"email"`
 	NeederId    string `bson:"neederId" json:"neederId"`
+	Status      string `bson:"status" json:"status"`
 }
 
 // GetAllNeeders func
@@ -301,11 +302,12 @@ func GetNeederDetailAsUser(id string) (NeedyDetail, error) {
 func CreateContact(contact Contact) (result Contact, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			err = errors.New("Contac create error")
+			err = errors.New("Contact create error")
 		}
 	}()
 
 	contact.ID = uuid.New().String()
+	contact.Status = "Pending"
 	_, err = database.ContactCollection.InsertOne(context.Background(), contact)
 
 	return contact, err

@@ -53,6 +53,26 @@ type NeedyInformation struct {
 	MaskedName string `json:"maskedName"`
 }
 
+type NeedyDetail struct {
+	ID         string    `json:"id"`
+	Category   string    `bson:"category" json:"category"`
+	Summary    string    `json:"summary"`
+	ShortName  string    `json:"shortName"`
+	MaskedName string    `json:"maskedName"`
+	Packages   []Package `bson:"packages" json:"packages"`
+}
+
+type Contact struct {
+	ID          string `bson:"_id" json:"id"`
+	FirstName   string `bson:"firstName" json:"firstName"`
+	LastName    string `bson:"lastName" json:"lastName"`
+	PackageId   string `bson:"packageId" json:"packageId"`
+	Description string `bson:"description" json:"description"`
+	PhoneNumber string `bson:"phoneNumber" json:"phoneNumber"`
+	Email       string `bson:"email" json:"email"`
+	NeederId    string `bson:"neederId" json:"neederId"`
+}
+
 // GetAllNeeders func
 func GetAllNeeders() ([]Needer, error) {
 	needers := []Needer{}
@@ -238,10 +258,10 @@ func GetAllNeediesInformations() ([]NeedyInformation, error) {
 			log.Fatal(err)
 		}
 		needyInformation := NeedyInformation{
-			ID:        needer.ID,
-			Summary:   needer.Summary,
-			Category:  needer.Category,
-			ShortName: fmt.Sprintf("%c%c", needer.FirstName[0], needer.LastName[0]),
+			ID:         needer.ID,
+			Summary:    needer.Summary,
+			Category:   needer.Category,
+			ShortName:  fmt.Sprintf("%c%c", needer.FirstName[0], needer.LastName[0]),
 			MaskedName: fmt.Sprintf("%s %s", mask(needer.FirstName), mask(needer.LastName)),
 		}
 
@@ -254,6 +274,57 @@ func GetAllNeediesInformations() ([]NeedyInformation, error) {
 	return neediesInformation, err
 }
 
+func GetNeederDetailAsUser(id string) (NeedyDetail, error) {
+	needer := Needer{}
+	err := database.NeederCollection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&needer)
+
+	var packages []Package
+	for _, neederPackage := range needer.Packages {
+		if neederPackage.IsPublished {
+			packages = append(packages, neederPackage)
+		}
+	}
+
+	needyDetail := NeedyDetail{
+		ID:         needer.ID,
+		Category:   needer.Category,
+		Summary:    needer.Summary,
+		ShortName:  fmt.Sprintf("%c%c", needer.FirstName[0], needer.LastName[0]),
+		MaskedName: fmt.Sprintf("%s %s", mask(needer.FirstName), mask(needer.LastName)),
+		Packages:   packages,
+	}
+
+	return needyDetail, err
+}
+
+// CreateContact func
+func CreateContact(contact Contact) (result Contact, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("Contac create error")
+		}
+	}()
+
+	contact.ID = uuid.New().String()
+	_, err = database.ContactCollection.InsertOne(context.Background(), contact)
+
+	return contact, err
+}
+
+// GetPackage func
+func GetPackage(neederId string, packageId string) (Package, error) {
+	needer := Needer{}
+	resultPackage := Package{}
+	err := database.NeederCollection.FindOne(context.TODO(), bson.M{"_id": neederId}).Decode(&needer)
+
+	for _, pkg := range needer.Packages {
+		if pkg.ID == packageId {
+			resultPackage = pkg
+		}
+	}
+
+	return resultPackage, err
+}
 
 func mask(s string) string {
 	runes := []rune(s)

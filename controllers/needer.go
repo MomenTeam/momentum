@@ -48,6 +48,16 @@ type IsPublished struct {
 	IsPublished bool   `json:"isPublished"`
 }
 
+type ContactForm struct {
+	FirstName   string `json:"firstName"`
+	LastName    string `json:"lastName"`
+	PackageId   string `json:"packageId"`
+	Description string `json:"description"`
+	PhoneNumber string `json:"phoneNumber"`
+	Email       string `json:"email"`
+	NeederId    string `json:"neederId"`
+}
+
 // GetAllNeeders func
 func GetAllNeeders(c *gin.Context) {
 	needer, err := models.GetAllNeeders()
@@ -266,7 +276,6 @@ func UpdatePublishStatusOfNeeder(c *gin.Context) {
 	return
 }
 
-
 // GetAllNeedersInformation func
 func GetAllNeedersInformation(c *gin.Context) {
 	neederInformations, err := models.GetAllNeediesInformations()
@@ -288,42 +297,66 @@ func GetAllNeedersInformation(c *gin.Context) {
 	return
 }
 
-// func GetNeedyDetail(id string) (NeedyDetail, error) {
-// 	needy := Needy{}
-// 	err := database.NeediesCollection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&needy)
+func GetNeederDetailAsUser(c *gin.Context) {
+	neederID := c.Param("id")
 
-// 	needFilter := bson.M{"_id": bson.M{"$in": needy.Needs}}
+	result, err := models.GetNeederDetailAsUser(neederID)
 
-// 	var needs []Need
-// 	cursor, err := database.NeedCollection.Find(context.Background(), needFilter)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Needer detail error",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	if cursor != nil {
-// 		for cursor.Next(context.Background()) {
-// 			var need Need
-// 			if err = cursor.Decode(&need); err != nil {
-// 				log.Fatal(err)
-// 			}
-// 			needs = append(needs, need)
-// 		}
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Needer detail.",
+		"data":    result,
+	})
+	return
+}
 
-// 		needyDetail := NeedyDetail{
-// 			ID:              needy.ID,
-// 			FirstName:       needy.FirstName,
-// 			LastName:        needy.LastName,
-// 			ShortName:  fmt.Sprintf("%c%c", needy.FirstName[0], needy.LastName[0]),
-// 			MaskedName:        fmt.Sprintf("%s %s", mask(needy.FirstName), mask(needy.LastName)),
-// 			PhoneNumber:     needy.PhoneNumber,
-// 			Summary:         needy.Summary,
-// 			Priority:        needy.Priority,
-// 			Address:         needy.Address,
-// 			NeedyCategories: needy.NeedyCategories,
-// 			Needs:           needs,
-// 			CreatedBy:       needy.CreatedBy,
-// 			CreatedAt:       needy.CreatedAt,
-// 		}
+// CreateContact func
+func CreateContact(c *gin.Context) {
+	contactForm := &ContactForm{}
+	err := c.BindJSON(&contactForm)
 
-// 		return needyDetail, err
-// 	}
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Contact cannot be created",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	return NeedyDetail{}, err
-// }
+	contact := &models.Contact{
+		FirstName:   contactForm.FirstName,
+		LastName:    contactForm.LastName,
+		PackageId:   contactForm.PackageId,
+		Description: contactForm.Description,
+		PhoneNumber: contactForm.PhoneNumber,
+		Email:       contactForm.Email,
+		NeederId:    contactForm.NeederId,
+	}
+
+	result, err := models.CreateContact(*contact)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Contact cannot be created",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Contact successfully created",
+		"data":    result,
+	})
+	return
+}

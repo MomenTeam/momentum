@@ -31,6 +31,8 @@ func Routes(router *gin.Engine) {
 		needies.GET("/getAllNeederInformations", controllers.GetAllNeedersInformation)
 		needies.GET("/getNeederDetailAsUser/:id", controllers.GetNeederDetailAsUser)
 		needies.POST("/createContactRequest", controllers.CreateContact)
+		needies.GET("/getContactRequests/:status", controllers.GetContactRequests)
+		needies.GET("/updateContactRequestStatus/:contactId", controllers.UpdateContactStatus)
 	}
 
 	// needs := router.Group("/v1/needs")

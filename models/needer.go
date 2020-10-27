@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -72,6 +73,18 @@ type Contact struct {
 	Email       string `bson:"email" json:"email"`
 	NeederId    string `bson:"neederId" json:"neederId"`
 	Status      string `bson:"status" json:"status"`
+}
+
+type ContactForm struct {
+	ID          string  `bson:"_id" json:"id"`
+	FirstName   string  `bson:"firstName" json:"firstName"`
+	LastName    string  `bson:"lastName" json:"lastName"`
+	Package     Package `bson:"package" json:"package"`
+	Description string  `bson:"description" json:"description"`
+	PhoneNumber string  `bson:"phoneNumber" json:"phoneNumber"`
+	Email       string  `bson:"email" json:"email"`
+	NeederId    string  `bson:"neederId" json:"neederId"`
+	Status      string  `bson:"status" json:"status"`
 }
 
 // GetAllNeeders func
@@ -328,8 +341,68 @@ func GetPackage(neederId string, packageId string) (Package, error) {
 	return resultPackage, err
 }
 
+// GetAllContactFormsWithPackage func
+func GetAllContactFormsWithPackage(status string) ([]ContactForm, error) {
+	var contacts []ContactForm
+
+	cursor, err := database.ContactCollection.Find(context.TODO(), bson.D{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	for cursor.Next(context.TODO()) {
+		var contact Contact
+		if err = cursor.Decode(&contact); err != nil {
+			log.Fatal(err)
+		}
+
+		pkg, _ := GetPackage(contact.NeederId, contact.PackageId)
+
+		contactForm := ContactForm{
+			ID:          contact.ID,
+			FirstName:   contact.FirstName,
+			LastName:    contact.LastName,
+			Package:     pkg,
+			Description: contact.Description,
+			PhoneNumber: contact.PhoneNumber,
+			Email:       contact.Email,
+			NeederId:    contact.NeederId,
+			Status:      contact.Status,
+		}
+
+		if strings.ToLower(status) == "all" {
+			contacts = append(contacts, contactForm)
+		} else if strings.ToLower(contactForm.Status) == strings.ToLower(status) {
+			contacts = append(contacts, contactForm)
+		}
+	}
+
+	return contacts, err
+}
+
+// UpdateContactRequest func
+func UpdateContactRequest(id string) (result string, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("UpdateContactRequest error")
+		}
+	}()
+
+	filter := bson.M{"_id": id}
+	update := bson.M{"$set": bson.M{"status": "Processing"}}
+	err = database.ContactCollection.FindOneAndUpdate(
+		context.TODO(),
+		filter,
+		update,
+	).Err()
+
+	return id, err
+}
+
 func mask(s string) string {
 	runes := []rune(s)
 	result := string(runes[0:1])
 	return result + "***"
 }
+
+
+delete package and lineItems neederId, PackageId, LineItemId

@@ -360,3 +360,47 @@ func CreateContact(c *gin.Context) {
 	})
 	return
 }
+
+func GetContactRequests(c *gin.Context) {
+	status := c.Param("status")
+
+	result, err := models.GetAllContactFormsWithPackage(status)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Contact requests fetch error",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Contact requests",
+		"data":    result,
+	})
+	return
+}
+
+// UpdateContactStatus func
+func UpdateContactStatus(c *gin.Context) {
+	contactId := c.Param("contactId")
+
+	result, err := models.UpdateContactRequest(contactId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "UpdateContactStatus error",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "UpdateContactStatus completed.",
+		"data":    result,
+	})
+	return
+}

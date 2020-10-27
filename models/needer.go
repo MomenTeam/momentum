@@ -3,6 +3,7 @@ package models
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"time"
 
@@ -42,6 +43,14 @@ type LineItem struct {
 	Name   string `bson:"name" json:"name"`
 	Price  int    `bson:"price" json:"price"`
 	Amount int    `bson:"amount" json:"amount"`
+}
+
+type NeedyInformation struct {
+	ID         string `json:"id"`
+	Category   string `bson:"category" json:"category"`
+	Summary    string `json:"summary"`
+	ShortName  string `json:"shortName"`
+	MaskedName string `json:"maskedName"`
 }
 
 // GetAllNeeders func
@@ -214,4 +223,40 @@ func UpdateNeederIsPublished(id string, isPublished bool) (boolean bool, err err
 	).Err()
 
 	return true, err
+}
+
+func GetAllNeediesInformations() ([]NeedyInformation, error) {
+	var neediesInformation []NeedyInformation
+
+	cursor, err := database.NeederCollection.Find(context.TODO(), bson.D{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	for cursor.Next(context.Background()) {
+		var needer Needer
+		if err = cursor.Decode(&needer); err != nil {
+			log.Fatal(err)
+		}
+		needyInformation := NeedyInformation{
+			ID:        needer.ID,
+			Summary:   needer.Summary,
+			Category:  needer.Category,
+			ShortName: fmt.Sprintf("%c%c", needer.FirstName[0], needer.LastName[0]),
+			MaskedName: fmt.Sprintf("%s %s", mask(needer.FirstName), mask(needer.LastName)),
+		}
+
+		if needer.IsPublished {
+			neediesInformation = append(neediesInformation, needyInformation)
+		}
+
+	}
+
+	return neediesInformation, err
+}
+
+
+func mask(s string) string {
+	runes := []rune(s)
+	result := string(runes[0:1])
+	return result + "***"
 }

@@ -265,3 +265,65 @@ func UpdatePublishStatusOfNeeder(c *gin.Context) {
 	})
 	return
 }
+
+
+// GetAllNeedersInformation func
+func GetAllNeedersInformation(c *gin.Context) {
+	neederInformations, err := models.GetAllNeediesInformations()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Needers couldn't fetch",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"count":   len(neederInformations),
+		"message": "All needer information fetched.",
+		"data":    neederInformations,
+	})
+	return
+}
+
+// func GetNeedyDetail(id string) (NeedyDetail, error) {
+// 	needy := Needy{}
+// 	err := database.NeediesCollection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&needy)
+
+// 	needFilter := bson.M{"_id": bson.M{"$in": needy.Needs}}
+
+// 	var needs []Need
+// 	cursor, err := database.NeedCollection.Find(context.Background(), needFilter)
+
+// 	if cursor != nil {
+// 		for cursor.Next(context.Background()) {
+// 			var need Need
+// 			if err = cursor.Decode(&need); err != nil {
+// 				log.Fatal(err)
+// 			}
+// 			needs = append(needs, need)
+// 		}
+
+// 		needyDetail := NeedyDetail{
+// 			ID:              needy.ID,
+// 			FirstName:       needy.FirstName,
+// 			LastName:        needy.LastName,
+// 			ShortName:  fmt.Sprintf("%c%c", needy.FirstName[0], needy.LastName[0]),
+// 			MaskedName:        fmt.Sprintf("%s %s", mask(needy.FirstName), mask(needy.LastName)),
+// 			PhoneNumber:     needy.PhoneNumber,
+// 			Summary:         needy.Summary,
+// 			Priority:        needy.Priority,
+// 			Address:         needy.Address,
+// 			NeedyCategories: needy.NeedyCategories,
+// 			Needs:           needs,
+// 			CreatedBy:       needy.CreatedBy,
+// 			CreatedAt:       needy.CreatedAt,
+// 		}
+
+// 		return needyDetail, err
+// 	}
+
+// 	return NeedyDetail{}, err
+// }

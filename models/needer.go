@@ -64,15 +64,17 @@ type NeedyDetail struct {
 }
 
 type Contact struct {
-	ID          string `bson:"_id" json:"id"`
-	FirstName   string `bson:"firstName" json:"firstName"`
-	LastName    string `bson:"lastName" json:"lastName"`
-	PackageId   string `bson:"packageId" json:"packageId"`
-	Description string `bson:"description" json:"description"`
-	PhoneNumber string `bson:"phoneNumber" json:"phoneNumber"`
-	Email       string `bson:"email" json:"email"`
-	NeederId    string `bson:"neederId" json:"neederId"`
-	Status      string `bson:"status" json:"status"`
+	ID          string    `bson:"_id" json:"id"`
+	FirstName   string    `bson:"firstName" json:"firstName"`
+	LastName    string    `bson:"lastName" json:"lastName"`
+	PackageId   string    `bson:"packageId" json:"packageId"`
+	Description string    `bson:"description" json:"description"`
+	PhoneNumber string    `bson:"phoneNumber" json:"phoneNumber"`
+	Email       string    `bson:"email" json:"email"`
+	NeederId    string    `bson:"neederId" json:"neederId"`
+	Status      string    `bson:"status" json:"status"`
+	CreatedAt   time.Time `bson:"createdAt" json:"createdAt"`
+	UpdatedAt   time.Time `bson:"updatedAt" json:"updatedAt"`
 }
 
 type ContactForm struct {
@@ -388,7 +390,7 @@ func UpdateContactRequest(id string, nextStatus string) (result string, err erro
 	}()
 
 	filter := bson.M{"_id": id}
-	update := bson.M{"$set": bson.M{"status": nextStatus}}
+	update := bson.M{"$set": bson.M{"status": nextStatus, "updatedAt": time.Now()}}
 	err = database.ContactCollection.FindOneAndUpdate(
 		context.TODO(),
 		filter,

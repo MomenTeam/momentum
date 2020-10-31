@@ -350,6 +350,7 @@ func CreateContact(c *gin.Context) {
 		})
 		return
 	}
+	createdAt := time.Now()
 
 	contact := &models.Contact{
 		FirstName:   contactForm.FirstName,
@@ -359,6 +360,8 @@ func CreateContact(c *gin.Context) {
 		PhoneNumber: contactForm.PhoneNumber,
 		Email:       contactForm.Email,
 		NeederId:    contactForm.NeederId,
+		CreatedAt:   createdAt,
+		UpdatedAt:   createdAt,
 	}
 
 	result, err := models.CreateContact(*contact)

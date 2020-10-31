@@ -83,7 +83,7 @@ type ContactForm struct {
 	Description string  `bson:"description" json:"description"`
 	PhoneNumber string  `bson:"phoneNumber" json:"phoneNumber"`
 	Email       string  `bson:"email" json:"email"`
-	NeederId    string  `bson:"neederId" json:"neederId"`
+	Needer      Needer  `bson:"needer" json:"needer"`
 	Status      string  `bson:"status" json:"status"`
 }
 
@@ -327,7 +327,7 @@ func CreateContact(contact Contact) (result Contact, err error) {
 }
 
 // GetPackage func
-func GetPackage(neederId string, packageId string) (Package, error) {
+func GetPackage(neederId string, packageId string) (Package, Needer, error) {
 	needer := Needer{}
 	resultPackage := Package{}
 	err := database.NeederCollection.FindOne(context.TODO(), bson.M{"_id": neederId}).Decode(&needer)
@@ -338,7 +338,7 @@ func GetPackage(neederId string, packageId string) (Package, error) {
 		}
 	}
 
-	return resultPackage, err
+	return resultPackage, needer, err
 }
 
 // GetAllContactFormsWithPackage func
@@ -352,10 +352,10 @@ func GetAllContactFormsWithPackage(status string) ([]ContactForm, error) {
 	for cursor.Next(context.TODO()) {
 		var contact Contact
 		if err = cursor.Decode(&contact); err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 
-		pkg, _ := GetPackage(contact.NeederId, contact.PackageId)
+		pkg, needer, _ := GetPackage(contact.NeederId, contact.PackageId)
 
 		contactForm := ContactForm{
 			ID:          contact.ID,
@@ -365,7 +365,7 @@ func GetAllContactFormsWithPackage(status string) ([]ContactForm, error) {
 			Description: contact.Description,
 			PhoneNumber: contact.PhoneNumber,
 			Email:       contact.Email,
-			NeederId:    contact.NeederId,
+			Needer:      needer,
 			Status:      contact.Status,
 		}
 

@@ -78,15 +78,17 @@ type Contact struct {
 }
 
 type ContactForm struct {
-	ID          string  `bson:"_id" json:"id"`
-	FirstName   string  `bson:"firstName" json:"firstName"`
-	LastName    string  `bson:"lastName" json:"lastName"`
-	Package     Package `bson:"package" json:"package"`
-	Description string  `bson:"description" json:"description"`
-	PhoneNumber string  `bson:"phoneNumber" json:"phoneNumber"`
-	Email       string  `bson:"email" json:"email"`
-	Needer      Needer  `bson:"needer" json:"needer"`
-	Status      string  `bson:"status" json:"status"`
+	ID          string    `bson:"_id" json:"id"`
+	FirstName   string    `bson:"firstName" json:"firstName"`
+	LastName    string    `bson:"lastName" json:"lastName"`
+	Package     Package   `bson:"package" json:"package"`
+	Description string    `bson:"description" json:"description"`
+	PhoneNumber string    `bson:"phoneNumber" json:"phoneNumber"`
+	Email       string    `bson:"email" json:"email"`
+	Needer      Needer    `bson:"needer" json:"needer"`
+	Status      string    `bson:"status" json:"status"`
+	CreatedAt   time.Time `bson:"createdAt" json:"createdAt"`
+	UpdatedAt   time.Time `bson:"updatedAt" json:"updatedAt"`
 }
 
 // GetAllNeeders func
@@ -369,6 +371,8 @@ func GetAllContactFormsWithPackage(status string) ([]ContactForm, error) {
 			Email:       contact.Email,
 			Needer:      needer,
 			Status:      contact.Status,
+			CreatedAt:   contact.CreatedAt,
+			UpdatedAt:   contact.UpdatedAt,
 		}
 
 		if strings.ToLower(status) == "all" {

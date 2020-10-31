@@ -64,6 +64,11 @@ type PackageDelete struct {
 	NeederID  string `json:"neederId"`
 }
 
+// NeederDelete type
+type NeederDelete struct {
+	NeederID string `json:"neederId"`
+}
+
 type ContactStatusUpdate struct {
 	ContactID  string `json:"contactId"`
 	NextStatus string `json:"nextStatus"`
@@ -136,6 +141,40 @@ func CreateNeeder(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
 		"message": "Needer successfully created",
+		"data":    result,
+	})
+	return
+}
+
+// DeletePackage func
+func DeleteNeeder(c *gin.Context) {
+	deleteNeeder := &NeederDelete{}
+
+	err := c.BindJSON(&deleteNeeder)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "You sent wrong fields.",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	result, err := models.DeleteNeeder(deleteNeeder.NeederID)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Needer delete error",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Needer deleted",
 		"data":    result,
 	})
 	return

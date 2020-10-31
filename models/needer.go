@@ -431,6 +431,14 @@ func DeletePackage(neederID string, packageID string) (needer Needer, err error)
 	return needer, err
 }
 
+//DeleteNeeder func
+func DeleteNeeder(neederID string) (string, error) {
+
+	err := database.NeederCollection.FindOneAndDelete(context.Background(), bson.M{"_id": neederID}).Err()
+
+	return "Successed", err
+}
+
 // //DeleteLineItem func
 // func DeleteLineItem(neederID string, packageID string, lineItemID string) (needer Needer, err error) {
 // 	upsert := true

@@ -58,6 +58,19 @@ type ContactForm struct {
 	NeederId    string `json:"neederId"`
 }
 
+// PackageDelete type
+type PackageDelete struct {
+	PackageID string `json:"packageId"`
+	NeederID  string `json:"neederId"`
+}
+
+// LineItemDelete type
+type LineItemDelete struct {
+	PackageID  string `json:"packageId"`
+	NeederID   string `json:"neederId"`
+	LineItemID string `json:"lineItemId"`
+}
+
 // GetAllNeeders func
 func GetAllNeeders(c *gin.Context) {
 	needer, err := models.GetAllNeeders()
@@ -404,3 +417,71 @@ func UpdateContactStatus(c *gin.Context) {
 	})
 	return
 }
+
+// DeletePackage func
+func DeletePackage(c *gin.Context) {
+	packageDeleteRequest := &PackageDelete{}
+
+	err := c.BindJSON(&packageDeleteRequest)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "You sent wrong fields.",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	result, err := models.DeletePackage(packageDeleteRequest.NeederID, packageDeleteRequest.PackageID)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Package delete error",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Package deleted",
+		"data":    result,
+	})
+	return
+}
+
+// // DeleteLineItem func
+// func DeleteLineItem(c *gin.Context) {
+// 	lineItemDeleteRequest := &LineItemDelete{}
+
+// 	err := c.BindJSON(&lineItemDeleteRequest)
+
+// 	if err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{
+// 			"status":  http.StatusBadRequest,
+// 			"message": "You sent wrong fields.",
+// 			"error":   err.Error(),
+// 		})
+// 		return
+// 	}
+
+// 	result, err := models.DeleteLineItem(lineItemDeleteRequest.NeederID, lineItemDeleteRequest.PackageID, lineItemDeleteRequest.LineItemID)
+
+// 	if err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{
+// 			"status":  http.StatusBadRequest,
+// 			"message": "Line Item delete error",
+// 			"error":   err.Error(),
+// 		})
+// 		return
+// 	}
+
+// 	c.JSON(http.StatusOK, gin.H{
+// 		"status":  http.StatusOK,
+// 		"message": "Line Item deleted",
+// 		"data":    result,
+// 	})
+// 	return
+// }

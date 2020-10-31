@@ -404,5 +404,49 @@ func mask(s string) string {
 	return result + "***"
 }
 
+//DeletePackage func
+func DeletePackage(neederID string, packageID string) (needer Needer, err error) {
+	upsert := true
+	after := options.After
+	opt := options.FindOneAndUpdateOptions{
+		ReturnDocument: &after,
+		Upsert:         &upsert,
+	}
+	filter := bson.M{"_id": neederID}
+	update := bson.M{"$pull": bson.M{"packages": bson.M{"_id": packageID}}}
+
+	err = database.NeederCollection.FindOneAndUpdate(
+		context.Background(),
+		filter,
+		update,
+		&opt,
+	).Decode(&needer)
+
+	return needer, err
+}
+
+// //DeleteLineItem func
+// func DeleteLineItem(neederID string, packageID string, lineItemID string) (needer Needer, err error) {
+// 	upsert := true
+// 	after := options.After
+// 	opt := options.FindOneAndUpdateOptions{
+// 		ReturnDocument: &after,
+// 		Upsert:         &upsert,
+// 	}
+
+// 	filter := bson.M{"$and": []interface{}{bson.M{"_id": neederID}, bson.M{"packages._id": packageID}}}
+// 	update := bson.M{"$pull": bson.M{"lineItems": bson.M{"_id": lineItemID}}}
+
+// 	err = database.NeederCollection.FindOneAndUpdate(
+// 		context.Background(),
+// 		filter,
+// 		update,
+// 		&opt,
+// 	).Decode(&needer)
+
+// 	// err = database.NeederCollection.FindOne(context.Background(), filter).Decode(&needer)
+
+// 	return needer, err
+// }
 
 //delete package and lineItems neederId, PackageId, LineItemId

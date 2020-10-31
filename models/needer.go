@@ -380,7 +380,7 @@ func GetAllContactFormsWithPackage(status string) ([]ContactForm, error) {
 }
 
 // UpdateContactRequest func
-func UpdateContactRequest(id string) (result string, err error) {
+func UpdateContactRequest(id string, nextStatus string) (result string, err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = errors.New("UpdateContactRequest error")
@@ -388,7 +388,7 @@ func UpdateContactRequest(id string) (result string, err error) {
 	}()
 
 	filter := bson.M{"_id": id}
-	update := bson.M{"$set": bson.M{"status": "Processing"}}
+	update := bson.M{"$set": bson.M{"status": nextStatus}}
 	err = database.ContactCollection.FindOneAndUpdate(
 		context.TODO(),
 		filter,

@@ -64,6 +64,11 @@ type PackageDelete struct {
 	NeederID  string `json:"neederId"`
 }
 
+type ContactStatusUpdate struct {
+	ContactID  string `json:"contactId"`
+	NextStatus string `json:"nextStatus"`
+}
+
 // LineItemDelete type
 type LineItemDelete struct {
 	PackageID  string `json:"packageId"`
@@ -398,9 +403,21 @@ func GetContactRequests(c *gin.Context) {
 
 // UpdateContactStatus func
 func UpdateContactStatus(c *gin.Context) {
-	contactId := c.Param("contactId")
+	updateContactStatusRequest := &ContactStatusUpdate{}
 
-	result, err := models.UpdateContactRequest(contactId)
+	err := c.BindJSON(&updateContactStatusRequest)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "You sent wrong fields.",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	result, err := models.UpdateContactRequest(updateContactStatusRequest.ContactID, updateContactStatusRequest.NextStatus)
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  http.StatusBadRequest,

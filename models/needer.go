@@ -10,6 +10,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/momenteam/momentum/database"
+	"github.com/momenteam/momentum/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -326,6 +327,8 @@ func CreateContact(contact Contact) (result Contact, err error) {
 	contact.ID = uuid.New().String()
 	contact.Status = "Pending"
 	_, err = database.ContactCollection.InsertOne(context.Background(), contact)
+
+	utils.SendEmail(contact.FirstName, 1, contact.Email)
 
 	return contact, err
 }

@@ -28,7 +28,7 @@ func Routes(router *gin.Engine) {
 		needies.POST("/createPackage", controllers.CreatePackage)
 		needies.POST("/deletePackage", controllers.DeletePackage)
 		needies.POST("/createLineItem", controllers.CreateLineItem)
-		// needies.POST("/deleteLineItem", controllers.DeleteLineItem)
+		needies.POST("/deleteLineItem", controllers.DeleteLineItem)
 		needies.PUT("/updatePublishStatusOfPackage", controllers.UpdatePublishStatusOfPackage)
 		needies.PUT("/updatePublishStatus", controllers.UpdatePublishStatusOfNeeder)
 		needies.GET("/getAllNeederInformations", controllers.GetAllNeedersInformation)

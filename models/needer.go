@@ -442,29 +442,28 @@ func DeleteNeeder(neederID string) (string, error) {
 	return "Successed", err
 }
 
-// //DeleteLineItem func
-// func DeleteLineItem(neederID string, packageID string, lineItemID string) (needer Needer, err error) {
-// 	upsert := true
-// 	after := options.After
-// 	opt := options.FindOneAndUpdateOptions{
-// 		ReturnDocument: &after,
-// 		Upsert:         &upsert,
-// 	}
+//DeleteLineItem func
+func DeleteLineItem(neederID string, packageID string, lineItemID string) (needer Needer, err error) {
+	result := Package{}
+	//upsert := true
+	//after := options.After
+	//opt := options.FindOneAndUpdateOptions{
+	//	ReturnDocument: &after,
+	//	Upsert:         &upsert,
+	//}
 
-// 	filter := bson.M{"$and": []interface{}{bson.M{"_id": neederID}, bson.M{"packages._id": packageID}}}
-// 	update := bson.M{"$pull": bson.M{"lineItems": bson.M{"_id": lineItemID}}}
+	filter := bson.M{"_id": neederID}
+	update := bson.M{"$pull": bson.M{"packages.$[].lineItems": bson.M{"_id": lineItemID}}}
+	err = database.NeederCollection.FindOneAndUpdate(
+		context.Background(),
+		filter,
+		update,
+	).Decode(&result)
 
-// 	err = database.NeederCollection.FindOneAndUpdate(
-// 		context.Background(),
-// 		filter,
-// 		update,
-// 		&opt,
-// 	).Decode(&needer)
+	//err = database.NeederCollection.FindOne(context.Background(), filter).Decode(&result)
 
-// 	// err = database.NeederCollection.FindOne(context.Background(), filter).Decode(&needer)
-
-// 	return needer, err
-// }
+	return needer, err
+}
 
 //delete package and lineItems neederId, PackageId, LineItemId
 

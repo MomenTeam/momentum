@@ -7,5 +7,11 @@
       <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>
       <jdbc-url>mongodb+srv://hackathon.qw6qb.mongodb.net/hackathon?retryWrites=true&amp;w=majority</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="momentum" uuid="2566a9c8-c98f-44da-96a7-1a6e4511b2a6">
+      <driver-ref>mongo</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>
+      <jdbc-url>mongodb+srv://hackathon.qw6qb.mongodb.net/hackathon-dev?retryWrites=true&amp;w=majority</jdbc-url>
+    </data-source>
   </component>
 </project>

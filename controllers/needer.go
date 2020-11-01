@@ -511,39 +511,39 @@ func DeletePackage(c *gin.Context) {
 	return
 }
 
-// // DeleteLineItem func
-// func DeleteLineItem(c *gin.Context) {
-// 	lineItemDeleteRequest := &LineItemDelete{}
+// DeleteLineItem func
+func DeleteLineItem(c *gin.Context) {
+	lineItemDeleteRequest := &LineItemDelete{}
 
-// 	err := c.BindJSON(&lineItemDeleteRequest)
+	err := c.BindJSON(&lineItemDeleteRequest)
 
-// 	if err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{
-// 			"status":  http.StatusBadRequest,
-// 			"message": "You sent wrong fields.",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "You sent wrong fields.",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	result, err := models.DeleteLineItem(lineItemDeleteRequest.NeederID, lineItemDeleteRequest.PackageID, lineItemDeleteRequest.LineItemID)
+	result, err := models.DeleteLineItem(lineItemDeleteRequest.NeederID, lineItemDeleteRequest.PackageID, lineItemDeleteRequest.LineItemID)
 
-// 	if err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{
-// 			"status":  http.StatusBadRequest,
-// 			"message": "Line Item delete error",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Line Item delete error",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	c.JSON(http.StatusOK, gin.H{
-// 		"status":  http.StatusOK,
-// 		"message": "Line Item deleted",
-// 		"data":    result,
-// 	})
-// 	return
-// }
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Line Item deleted",
+		"data":    result,
+	})
+	return
+}
 
 // GetStatistics func
 func GetStatistics(c *gin.Context) {

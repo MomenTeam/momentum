@@ -443,26 +443,18 @@ func DeleteNeeder(neederID string) (string, error) {
 }
 
 //DeleteLineItem func
-func DeleteLineItem(neederID string, packageID string, lineItemID string) (needer Needer, err error) {
-	result := Package{}
-	//upsert := true
-	//after := options.After
-	//opt := options.FindOneAndUpdateOptions{
-	//	ReturnDocument: &after,
-	//	Upsert:         &upsert,
-	//}
+func DeleteLineItem(neederID string, lineItemID string) (needer Needer, err error) {
+	result := Needer{}
 
 	filter := bson.M{"_id": neederID}
-	update := bson.M{"$pull": bson.M{"packages.$[].lineItems": bson.M{"_id": lineItemID}}}
+	update := bson.M{"$pull":  bson.M{"packages.$[].lineItems": bson.M{"_id": lineItemID}}}
 	err = database.NeederCollection.FindOneAndUpdate(
 		context.Background(),
 		filter,
 		update,
 	).Decode(&result)
 
-	//err = database.NeederCollection.FindOne(context.Background(), filter).Decode(&result)
-
-	return needer, err
+	return result, err
 }
 
 //delete package and lineItems neederId, PackageId, LineItemId

@@ -76,7 +76,6 @@ type ContactStatusUpdate struct {
 
 // LineItemDelete type
 type LineItemDelete struct {
-	PackageID  string `json:"packageId"`
 	NeederID   string `json:"neederId"`
 	LineItemID string `json:"lineItemId"`
 }
@@ -526,7 +525,7 @@ func DeleteLineItem(c *gin.Context) {
 		return
 	}
 
-	result, err := models.DeleteLineItem(lineItemDeleteRequest.NeederID, lineItemDeleteRequest.PackageID, lineItemDeleteRequest.LineItemID)
+	result, err := models.DeleteLineItem(lineItemDeleteRequest.NeederID, lineItemDeleteRequest.LineItemID)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

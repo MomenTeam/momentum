@@ -544,3 +544,38 @@ func DeletePackage(c *gin.Context) {
 // 	})
 // 	return
 // }
+
+// GetStatistics func
+func GetStatistics(c *gin.Context) {
+	contacts, err := models.GetAllContacts()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  http.StatusBadRequest,
+			"message": "Statistics couldn't fetch",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	completed := []models.Contact{}
+	processing := []models.Contact{}
+
+	for _, c := range contacts {
+		switch c.Status {
+		case "PROCESSING":
+			processing = append(processing, c)
+		case "COMPLETED":
+			completed = append(completed, c)
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":          http.StatusOK,
+		"totalCount":      len(contacts),
+		"completedCount":  len(completed),
+		"processingCount": len(processing),
+		"pendingCount":    len(contacts) - (len(completed) + len(processing)),
+		"message":         "Statistics fetched.",
+	})
+	return
+}

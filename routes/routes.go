@@ -35,6 +35,7 @@ func Routes(router *gin.Engine) {
 		needies.GET("/getNeederDetailAsUser/:id", controllers.GetNeederDetailAsUser)
 		needies.POST("/createContactRequest", controllers.CreateContact)
 		needies.GET("/getContactRequests/:status", controllers.GetContactRequests)
+		needies.GET("/statistics", controllers.GetStatistics)
 		needies.POST("/updateContactRequestStatus", controllers.UpdateContactStatus)
 	}
 

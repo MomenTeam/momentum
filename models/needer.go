@@ -467,3 +467,22 @@ func DeleteNeeder(neederID string) (string, error) {
 // }
 
 //delete package and lineItems neederId, PackageId, LineItemId
+
+// GetAllNeeders func
+func GetAllContacts() ([]Contact, error) {
+	contacts := []Contact{}
+
+	cursor, err := database.ContactCollection.Find(context.TODO(), bson.D{})
+	if err != nil {
+		log.Println(err)
+	}
+	for cursor.Next(context.Background()) {
+		var contact Contact
+		if err = cursor.Decode(&contact); err != nil {
+			log.Println(err)
+		}
+		contacts = append(contacts, contact)
+	}
+
+	return contacts, err
+}
